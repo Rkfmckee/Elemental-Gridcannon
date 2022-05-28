@@ -35,11 +35,9 @@ public class PlayerStatePlaceCard : PlayerState {
 	public override void CleanupState() {
 		base.CleanupState();
 
-		Debug.Log("here 0");
 		var cardSlots = References.Cards.cardSlots;
 		foreach(var slot in cardSlots) {
 			slot.SetGlowEnabled(false);
-			Debug.Log("here 1");
 		}
 	}
 
