@@ -19,7 +19,10 @@ public class PlayerStatePickupCard : PlayerState {
 
 	#region Methods
 
-	protected override void LeftClickedHighlightable() {
+	protected override void LeftClicked(GameObject target) {
+		var cardDeck = target.GetComponent<CardDeck>();
+		cardDeck.PickupCard();
+
 		Debug.Log("Picked up card");
 		playerController.SetCurrentState(new PlayerStatePlaceCard(gameObject));
 	}

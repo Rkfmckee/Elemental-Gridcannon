@@ -36,7 +36,7 @@ public abstract class PlayerState {
 
 	#region Methods
 
-	protected abstract void LeftClickedHighlightable();
+	protected abstract void LeftClicked(GameObject target);
 
 	private void LookForHighlightable() {
 		Ray cameraToMouse = camera.ScreenPointToRay(Input.mousePosition);
@@ -57,7 +57,7 @@ public abstract class PlayerState {
 			}
 
 			if (Input.GetButtonDown("Fire1")) {
-				LeftClickedHighlightable();
+				LeftClicked(currentHighlight.gameObject);
 			}
 			
 		} else {

@@ -19,7 +19,11 @@ public class PlayerStatePlaceCard : PlayerState {
 
 	#region Methods
 
-	protected override void LeftClickedHighlightable() {
+	protected override void LeftClicked(GameObject target) {
+		var card = References.Cards.currentCard;
+		var cardSlot = target.GetComponent<CardSlot>();
+		cardSlot.AddCard(card);
+		
 		Debug.Log("Placed card");
 		playerController.SetCurrentState(new PlayerStatePickupCard(gameObject));
 	}

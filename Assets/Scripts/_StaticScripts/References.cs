@@ -4,4 +4,8 @@ using UnityEngine;
 public static class References {
 	public static Camera camera;
 	public static CameraController cameraController;
+
+	public static class Cards {
+		public static Card currentCard;
+	}
 }

@@ -1,8 +1,9 @@
-﻿{
+{
     "files.exclude":
     {
         "**/.DS_Store":true,
         "**/.git":true,
+        "**/.gitignore":true,
         "**/.gitmodules":true,
         "**/*.booproj":true,
         "**/*.pidb":true,
@@ -51,5 +52,8 @@
         "ProjectSettings/":true,
         "temp/":true,
         "Temp/":true
-    }
+    },
+	"files.eol": "\r\n",
+	"editor.detectIndentation": false,
+	"editor.insertSpaces": false
 }
