@@ -11,11 +11,24 @@ public class Card : MonoBehaviour {
 
 	#region Methods
 
+		#region Get/Set
+
+		public CardState GetCurrentState() {
+			return currentState;
+		}
+
+		public void SetCurrentState(CardState state) {
+			currentState = state;
+		}
+
+		#endregion
+
 	public void MoveCard(Vector3 position, Vector3 rotation, float timeToMove, CardState finishState) {
 		StartCoroutine(MovePositionAndRotation(transform.position, position, Quaternion.Euler(rotation), timeToMove, finishState));
 	}
 
 	private IEnumerator MovePositionAndRotation(Vector3 startPosition, Vector3 finishPosition, Quaternion finishRotation, float timeToMove, CardState finishState) {
+		currentState = CardState.Moving;
 		var startRotation = transform.rotation;
 		
 		while (movementTimer < timeToMove) {

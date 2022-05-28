@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour {
 			return;
 		}
 
-		currentState.ClearLastHighlight();
+		currentState.CleanupState();
 	}
 
 	#endregion

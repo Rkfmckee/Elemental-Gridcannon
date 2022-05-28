@@ -23,7 +23,6 @@ public class PlayerStatePickupCard : PlayerState {
 		var cardDeck = target.GetComponent<CardDeck>();
 		cardDeck.PickupCard();
 
-		Debug.Log("Picked up card");
 		playerController.SetCurrentState(new PlayerStatePlaceCard(gameObject));
 	}
 

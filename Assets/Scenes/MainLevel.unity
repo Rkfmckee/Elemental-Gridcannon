@@ -674,7 +674,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &1261563837
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1144,6 +1144,10 @@ PrefabInstance:
     - target: {fileID: 4626060495447958206, guid: 5988a8aaa92403749ba5b4232cd155d2, type: 3}
       propertyPath: m_Name
       value: CardSlot
+      objectReference: {fileID: 0}
+    - target: {fileID: 4626060495447958206, guid: 5988a8aaa92403749ba5b4232cd155d2, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5988a8aaa92403749ba5b4232cd155d2, type: 3}

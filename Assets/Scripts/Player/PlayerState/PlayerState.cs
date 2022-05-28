@@ -4,7 +4,7 @@ public abstract class PlayerState {
 	#region Properties
 
 	protected int? highlightMask;
-	protected Highlight lastHighlight;
+	protected GameObject lastTarget;
 
 	protected GameObject gameObject;
 	protected PlayerController playerController;
@@ -36,28 +36,40 @@ public abstract class PlayerState {
 
 	#region Methods
 
+	public virtual void CleanupState() {
+		ClearLastHighlight();
+	}
+
 	protected abstract void LeftClicked(GameObject target);
 
-	private void LookForHighlightable() {
+	protected virtual void EnableHighlight(GameObject target) {
+		target.GetComponent<Highlight>().EnableOutline(true);
+	}
+
+	protected virtual void DisableHighlight(GameObject target) {
+		target.GetComponent<Highlight>().EnableOutline(false);
+	}
+
+	protected virtual void LookForHighlightable() {
 		Ray cameraToMouse = camera.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
 
 		if (Physics.Raycast(cameraToMouse, out hit, Mathf.Infinity, highlightMask.Value)) {
-			var currentHighlight = hit.collider.GetComponent<Highlight>();
+			var currentTarget = hit.collider.gameObject;
 
-			if (currentHighlight == null) {
+			if (currentTarget == null) {
 				Debug.Log($"{hit.collider.name} doesn't have a highlight script");
 				return;
 			}
 
-			if (!currentHighlight.IsOutlineActive()) {
+			if (currentTarget != lastTarget) {
 				ClearLastHighlight();
-				currentHighlight.EnableOutline(true);
-				lastHighlight = currentHighlight;
+				EnableHighlight(currentTarget);
+				lastTarget = currentTarget;
 			}
 
 			if (Input.GetButtonDown("Fire1")) {
-				LeftClicked(currentHighlight.gameObject);
+				LeftClicked(currentTarget.gameObject);
 			}
 			
 		} else {
@@ -65,13 +77,13 @@ public abstract class PlayerState {
 		}
 	}
 
-	public void ClearLastHighlight() {
-		if (lastHighlight == null) {
+	protected void ClearLastHighlight() {
+		if (lastTarget == null) {
 			return;
 		}
 
-		lastHighlight.EnableOutline(false);
-		lastHighlight = null;
+		DisableHighlight(lastTarget);
+		lastTarget = null;
 	}
 
 	#endregion

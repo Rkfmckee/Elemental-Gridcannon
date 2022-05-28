@@ -7,5 +7,6 @@ public static class References {
 
 	public static class Cards {
 		public static Card currentCard;
+		public static List<CardSlot> cardSlots = new List<CardSlot>();
 	}
 }
