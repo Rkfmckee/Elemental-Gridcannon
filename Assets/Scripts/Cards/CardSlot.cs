@@ -38,7 +38,7 @@ public class CardSlot : MonoBehaviour {
 		card.transform.parent = transform;
 
 		cards.Add(card);
-		nextCardPosition.y += card.transform.localScale.y;
+		nextCardPosition.y += 0.01f;
 	}
 
 	public void SetGlowEnabled(bool enable) {
