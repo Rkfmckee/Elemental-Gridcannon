@@ -28,8 +28,6 @@ public class CardType {
 		this.value = value;
 		this.suit = suit;
 		type = $"{value.GetDescription()}{suit.GetDescription()}";
-
-		Debug.Log($"Value: {value}\nSuit: {suit}\nType: {type}");
 	}
 
 	#endregion

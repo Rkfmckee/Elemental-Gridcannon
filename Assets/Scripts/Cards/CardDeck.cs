@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using static Card;
 using static CardType;
@@ -9,6 +11,8 @@ public class CardDeck : MonoBehaviour {
 	private Vector3 topOfDeckPosition;
 	private Vector3 pickupPosition;
 	private Vector3 pickupRotation;
+	private List<CardValue> enemyValues;
+	private List<CardValue> specialValues;
 
 	#endregion
 
@@ -18,6 +22,9 @@ public class CardDeck : MonoBehaviour {
 		topOfDeckPosition = new Vector3(0, 0.2f, 0);
 		pickupPosition = new Vector3(1.5f, 2, -2.5f);
 		pickupRotation = new Vector3(-30, 0, 0);
+
+		enemyValues = new List<CardValue> { CardValue.Jack, CardValue.Queen, CardValue.King };
+		specialValues = new List<CardValue> { CardValue.Ace };
 	}
 
 	#endregion
@@ -38,10 +45,37 @@ public class CardDeck : MonoBehaviour {
 
 		var cardController = card.GetComponent<Card>();
 		cardController.SetCardType(cardValue, cardSuit);
-		cardController.MoveCard(pickupPosition, pickupRotation, 1, CardState.PickedUp);
+
+		StartCoroutine(PickupCard(cardController));
 
 		References.Cards.currentCard = cardController;
 	}
+
+	private IEnumerator PickupCard(Card card) {
+		card.MoveCard(pickupPosition, pickupRotation, 1, CardState.PickedUp);
+
+		while (card.GetCurrentState() == CardState.Moving) {
+			// Wait until the card is fully picked up
+			yield return null;
+		}
+
+		var cardValue = card.GetCardType().GetValue();
+
+		if (enemyValues.Contains(cardValue)) {
+			// Destroy card and spawn an enemy
+			print("Enemy card drawn");
+			
+		} else if (specialValues.Contains(cardValue)) {
+			// Place the card in a specific place
+			print("Special card drawn");
+			
+		} else {
+			// It's a regular numbered card
+			print("Regular card drawn");
+		}
+
+		
+	} 
 
 	#endregion
 }
