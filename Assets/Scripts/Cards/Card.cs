@@ -1,17 +1,35 @@
 using System.Collections;
 using UnityEngine;
+using static CardType;
 
 public class Card : MonoBehaviour {
 	#region Properties
 
+	private CardType cardType;
 	private CardState currentState;
 	private float movementTimer;
+
+	#endregion
+
+	#region Events
+
+	private void Awake() {
+		cardType = new CardType();
+	}
 
 	#endregion
 
 	#region Methods
 
 		#region Get/Set
+
+		public CardType GetCardType() {
+			return cardType;
+		}
+
+		public void SetCardType(CardValue value, CardSuit suit) {
+			cardType.SetType(value, suit);
+		}
 
 		public CardState GetCurrentState() {
 			return currentState;
