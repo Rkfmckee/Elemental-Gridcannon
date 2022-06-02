@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4400075206801064145}
   - component: {fileID: 5201753325783154363}
-  - component: {fileID: -64608996037747877}
   m_Layer: 0
   m_Name: Card
   m_TagString: Untagged
@@ -45,20 +44,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.633145, y: 0.006217062, z: 0.8889872}
-  m_Center: {x: 0.0017049909, y: -0.00032658153, z: 0.0008793473}
---- !u!114 &-64608996037747877
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4400075206801366257}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78e122cb5b78a254297c74e1583afecd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Size: {x: 0.73, y: 0.005, z: 1.02}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5844828603774101581
 GameObject:
   m_ObjectHideFlags: 0
@@ -86,7 +73,7 @@ Transform:
   m_GameObject: {fileID: 5844828603774101581}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0.7071068, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_LocalScale: {x: 11.5, y: 11.5, z: 11.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4400075206801064145}

@@ -59,22 +59,7 @@ public class CardDeck : MonoBehaviour {
 			yield return null;
 		}
 
-		var cardValue = card.GetCardType().GetValue();
-
-		if (enemyValues.Contains(cardValue)) {
-			// Destroy card and spawn an enemy
-			print("Enemy card drawn");
-			
-		} else if (specialValues.Contains(cardValue)) {
-			// Place the card in a specific place
-			print("Special card drawn");
-			
-		} else {
-			// It's a regular numbered card
-			print("Regular card drawn");
-		}
-
-		
+		card.ActivateCard();
 	} 
 
 	#endregion

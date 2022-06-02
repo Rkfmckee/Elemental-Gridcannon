@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using static Card;
 
@@ -5,6 +6,8 @@ public class PlayerStatePlaceCard : PlayerState {
 	#region Properties
 
 	private Card card;
+
+	private List<CardSlot> cardSlots;
 
 	#endregion
 	
@@ -14,9 +17,9 @@ public class PlayerStatePlaceCard : PlayerState {
 		highlightMask = 1 << LayerMask.NameToLayer("CardSlot");
 		card = References.Cards.currentCard;
 
-		var cardSlots = References.Cards.cardSlots;
+		CheckWhichCardSlots();
 		foreach(var slot in cardSlots) {
-			slot.SetGlowEnabled(true);
+			slot.SetCanPlaceCard(true);
 		}
 	}
 
@@ -35,17 +38,21 @@ public class PlayerStatePlaceCard : PlayerState {
 	public override void CleanupState() {
 		base.CleanupState();
 
-		var cardSlots = References.Cards.cardSlots;
 		foreach(var slot in cardSlots) {
-			slot.SetGlowEnabled(false);
+			slot.SetCanPlaceCard(false);
 		}
 	}
 
 	protected override void LeftClicked(GameObject target) {
 		var cardSlot = target.GetComponent<CardSlot>();
+		if (!cardSlot.CanPlaceCard()) {
+			return;
+		}
+
 		cardSlot.AddCard(card);
 		
 		playerController.SetCurrentState(new PlayerStatePickupCard(gameObject));
+		References.Cards.currentCard = null;
 	}
 
 	protected override void EnableHighlight(GameObject target) {
@@ -62,6 +69,23 @@ public class PlayerStatePlaceCard : PlayerState {
 		}
 
 		base.LookForHighlightable();
+	}
+
+	private void CheckWhichCardSlots() {
+		if (card is NumberCard) {
+			cardSlots = References.Cards.Slots.number;
+			return;
+		}
+
+		if (card is EnemyCard) {
+			cardSlots = References.Cards.Slots.enemy;
+			return;
+		}
+
+		if (card is SpecialCard) {
+			cardSlots = References.Cards.Slots.special;
+			return;
+		}
 	}
 
 	#endregion

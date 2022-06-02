@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using static CardType;
 
-public class Card : MonoBehaviour {
+public abstract class Card : MonoBehaviour {
 	#region Properties
 
 	private CardType cardType;
@@ -40,6 +40,8 @@ public class Card : MonoBehaviour {
 		}
 
 		#endregion
+
+	public abstract void ActivateCard();
 
 	public void MoveCard(Vector3 position, Vector3 rotation, float timeToMove, CardState finishState) {
 		StartCoroutine(MovePositionAndRotation(transform.position, position, Quaternion.Euler(rotation), timeToMove, finishState));
