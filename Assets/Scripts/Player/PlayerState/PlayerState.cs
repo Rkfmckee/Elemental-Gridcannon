@@ -14,9 +14,8 @@ public abstract class PlayerState {
 	
 	#region Constructor
 
-	public PlayerState(GameObject gameObj) {
-		gameObject = gameObj;
-		playerController = gameObject.GetComponent<PlayerController>();
+	public PlayerState() {
+		playerController = References.playerController;
 		camera = References.camera;
 
 		highlightMask = null;

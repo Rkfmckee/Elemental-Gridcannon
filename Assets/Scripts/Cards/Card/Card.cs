@@ -5,7 +5,7 @@ using static CardType;
 public abstract class Card : MonoBehaviour {
 	#region Properties
 
-	private CardType cardType;
+	protected CardType cardType;
 	private CardState currentState;
 	private float movementTimer;
 

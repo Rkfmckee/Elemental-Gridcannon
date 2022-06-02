@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerStatePickupCard : PlayerState {
 	#region Constructor
 
-	public PlayerStatePickupCard(GameObject gameObj) : base(gameObj) {
+	public PlayerStatePickupCard() : base() {
 		highlightMask = 1 << LayerMask.NameToLayer("CardDeck");
 	}
 
@@ -23,7 +23,7 @@ public class PlayerStatePickupCard : PlayerState {
 		var cardDeck = target.GetComponent<CardDeck>();
 		cardDeck.PickupCard();
 
-		playerController.SetCurrentState(new PlayerStatePlaceCard(gameObject));
+		playerController.SetCurrentState(null);
 	}
 
 	#endregion

@@ -6,6 +6,7 @@ public abstract class CardSlot : MonoBehaviour {
 	#region Properties
 
 	private bool canPlaceCard;
+	private Card topCard;
 	private List<Card> cards;
 	private Vector3 nextCardPosition;
 	private Vector3 cardRotation;
@@ -21,7 +22,6 @@ public abstract class CardSlot : MonoBehaviour {
 		slotGlow = transform.Find("CardSlotGlow").gameObject;
 		particleSystems = slotGlow.GetComponentsInChildren<ParticleSystemRenderer>();
 
-		canPlaceCard = false;
 		cards = new List<Card>();
 		nextCardPosition = transform.position;
 		cardRotation = new Vector3(0, -90, 0);
@@ -30,6 +30,7 @@ public abstract class CardSlot : MonoBehaviour {
 		translucentParticleMaterialColour = defaultParticleMaterialColour;
 		translucentParticleMaterialColour.a = 0.1f;
 
+		SetCanPlaceCard(false);
 		HighlightTranslucent();
 	}
 	
@@ -43,7 +44,25 @@ public abstract class CardSlot : MonoBehaviour {
 
 		public void SetCanPlaceCard(bool canPlace) {
 			canPlaceCard = canPlace;
-			slotGlow.SetActive(canPlace);
+
+			if (canPlace) {
+				slotGlow.transform.localPosition = Vector3.zero;
+				References.Cards.Slots.active.Add(this);
+			} else {
+				slotGlow.transform.localPosition = Vector3.down;
+			}
+		}
+
+		public Card GetTopCard() {
+			return topCard;
+		}
+
+		public void SetTopCard(Card card) {
+			topCard = card;
+		}
+
+		public List<Card> GetCards() {
+			return cards;
 		}
 
 		#endregion
@@ -52,6 +71,7 @@ public abstract class CardSlot : MonoBehaviour {
 		card.MoveCard(nextCardPosition, cardRotation, 1, CardState.Placed);
 		card.transform.parent = transform;
 
+		topCard = card;
 		cards.Add(card);
 		nextCardPosition.y += 0.01f;
 	}

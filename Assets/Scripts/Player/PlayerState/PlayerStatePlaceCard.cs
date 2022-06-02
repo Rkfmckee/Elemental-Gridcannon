@@ -13,14 +13,10 @@ public class PlayerStatePlaceCard : PlayerState {
 	
 	#region Constructor
 
-	public PlayerStatePlaceCard(GameObject gameObj) : base(gameObj) {
+	public PlayerStatePlaceCard() : base() {
 		highlightMask = 1 << LayerMask.NameToLayer("CardSlot");
 		card = References.Cards.currentCard;
-
-		CheckWhichCardSlots();
-		foreach(var slot in cardSlots) {
-			slot.SetCanPlaceCard(true);
-		}
+		cardSlots = References.Cards.Slots.active;
 	}
 
 	#endregion
@@ -41,6 +37,8 @@ public class PlayerStatePlaceCard : PlayerState {
 		foreach(var slot in cardSlots) {
 			slot.SetCanPlaceCard(false);
 		}
+
+		References.Cards.Slots.active.Clear();
 	}
 
 	protected override void LeftClicked(GameObject target) {
@@ -50,9 +48,8 @@ public class PlayerStatePlaceCard : PlayerState {
 		}
 
 		cardSlot.AddCard(card);
-		
-		playerController.SetCurrentState(new PlayerStatePickupCard(gameObject));
 		References.Cards.currentCard = null;
+		playerController.SetCurrentState(new PlayerStatePickupCard());
 	}
 
 	protected override void EnableHighlight(GameObject target) {
@@ -69,23 +66,6 @@ public class PlayerStatePlaceCard : PlayerState {
 		}
 
 		base.LookForHighlightable();
-	}
-
-	private void CheckWhichCardSlots() {
-		if (card is NumberCard) {
-			cardSlots = References.Cards.Slots.number;
-			return;
-		}
-
-		if (card is EnemyCard) {
-			cardSlots = References.Cards.Slots.enemy;
-			return;
-		}
-
-		if (card is SpecialCard) {
-			cardSlots = References.Cards.Slots.special;
-			return;
-		}
 	}
 
 	#endregion
