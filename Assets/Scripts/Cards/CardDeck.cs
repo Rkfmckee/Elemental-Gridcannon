@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static Card;
 using static CardType;
@@ -8,6 +9,7 @@ using static CardType;
 public class CardDeck : MonoBehaviour {
 	#region Properties
 
+	private List<(CardSuit, CardValue)> cardsInDeck;
 	private Vector3 topOfDeckPosition;
 	private Vector3 pickupPosition;
 	private Vector3 pickupRotation;
@@ -25,18 +27,23 @@ public class CardDeck : MonoBehaviour {
 
 		enemyValues = new List<CardValue> { CardValue.Jack, CardValue.Queen, CardValue.King };
 		specialValues = new List<CardValue> { CardValue.Ace };
+
+		FillDeckWithCards();
 	}
 
 	#endregion
 	
 	#region Methods
+	public bool PickupCard() {
+		if (cardsInDeck.Count == 0) {
+			print("No cards remaining in deck");
+			return false;
+		}
 
-	public void PickupCard() {
-		var allValues = Enum.GetValues(typeof(CardValue));
-		var cardValue = (CardValue) allValues.GetValue(UnityEngine.Random.Range(0, allValues.Length));
-
-		var allSuits = Enum.GetValues(typeof(CardSuit));
-		var cardSuit = (CardSuit) allSuits.GetValue(UnityEngine.Random.Range(0, allSuits.Length));
+		var cardToPick = cardsInDeck[0];
+		cardsInDeck.RemoveAt(0);
+		var cardSuit = cardToPick.Item1;
+		var cardValue = cardToPick.Item2;
 		
 		var cardPrefab = Resources.Load<GameObject>($"Prefabs/Cards/{cardSuit}/{cardValue.GetDescription()}{cardSuit}");
 		var card = Instantiate(cardPrefab);
@@ -49,6 +56,7 @@ public class CardDeck : MonoBehaviour {
 		StartCoroutine(PickupCard(cardController));
 
 		References.Cards.currentCard = cardController;
+		return true;
 	}
 
 	private IEnumerator PickupCard(Card card) {
@@ -60,7 +68,25 @@ public class CardDeck : MonoBehaviour {
 		}
 
 		card.ActivateCard();
-	} 
+	}
+
+	private void FillDeckWithCards() {
+		cardsInDeck = new List<(CardSuit, CardValue)>();
+		var allValues = Enum.GetValues(typeof(CardValue));
+		var allSuits = Enum.GetValues(typeof(CardSuit));
+
+		foreach(var suit in allSuits) {
+			var cardSuit = (CardSuit) suit;
+			foreach(var value in allValues) {
+				var cardValue = (CardValue) value;
+				cardsInDeck.Add((cardSuit, cardValue));
+			}
+		}
+
+		var random = new System.Random();
+        var randomized = cardsInDeck.OrderBy(item => random.Next());
+		cardsInDeck = randomized.ToList();
+	}
 
 	#endregion
 }

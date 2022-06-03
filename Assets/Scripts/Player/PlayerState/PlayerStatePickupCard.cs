@@ -21,9 +21,10 @@ public class PlayerStatePickupCard : PlayerState {
 
 	protected override void LeftClicked(GameObject target) {
 		var cardDeck = target.GetComponent<CardDeck>();
-		cardDeck.PickupCard();
 
-		playerController.SetCurrentState(null);
+		if (cardDeck.PickupCard()) {
+			playerController.SetCurrentState(null);
+		}
 	}
 
 	#endregion
