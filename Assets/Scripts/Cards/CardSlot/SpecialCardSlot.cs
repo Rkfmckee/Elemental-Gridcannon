@@ -4,7 +4,7 @@ public class SpecialCardSlot : CardSlot {
 	protected override void Awake() {
 		base.Awake();
 
-		References.Cards.Slots.special.Add(this);
+		References.Cards.Slots.special = this;
 	}
 
 	#endregion

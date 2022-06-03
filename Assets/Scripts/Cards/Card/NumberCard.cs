@@ -19,8 +19,7 @@ public class NumberCard : Card {
 			}
 		}
 
-		var playerController = References.playerController;
-		playerController.SetCurrentState(new PlayerStatePlaceCard());
+		References.playerController.SetCurrentState(new PlayerStatePlaceCard());
 	}
 
 	#endregion

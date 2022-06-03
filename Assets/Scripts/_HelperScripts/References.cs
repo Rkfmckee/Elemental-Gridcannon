@@ -11,9 +11,9 @@ public static class References {
 
 		public static class Slots {
 			public static List<CardSlot> active = new List<CardSlot>();
-			public static List<CardSlot> number = new List<CardSlot>();
-			public static List<CardSlot> enemy = new List<CardSlot>();
-			public static List<CardSlot> special = new List<CardSlot>();
+			public static List<NumberCardSlot> number = new List<NumberCardSlot>();
+			public static List<EnemyCardSlot> enemy = new List<EnemyCardSlot>();
+			public static CardSlot special;
 		}
 	}
 }

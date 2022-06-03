@@ -10,7 +10,7 @@ public class CardType {
 
 	#endregion
 
-	#region Get Methods
+	#region Get/Set Methods
 
 	public CardValue GetValue() {
 		return value;
@@ -28,6 +28,21 @@ public class CardType {
 		this.value = value;
 		this.suit = suit;
 		type = $"{value.GetDescription()}{suit.GetDescription()}";
+	}
+
+	public (CardSuit, CardSuit)? GetOppositeSuits() {
+		switch (suit) {
+			case CardSuit.Air:
+				return (CardSuit.Earth, CardSuit.Water);
+			case CardSuit.Earth:
+				return (CardSuit.Air, CardSuit.Fire);
+			case CardSuit.Fire:
+				return (CardSuit.Water, CardSuit.Earth);
+			case CardSuit.Water:
+				return (CardSuit.Fire, CardSuit.Air);
+		}
+
+		return null;
 	}
 
 	#endregion

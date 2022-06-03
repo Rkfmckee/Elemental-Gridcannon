@@ -3,6 +3,11 @@ public class SpecialCard : Card {
 
 	public override void ActivateCard() {
 		print("Picked up special card");
+
+		var specialSlot = References.Cards.Slots.special;
+		specialSlot.AddCard(this);
+
+		References.playerController.SetCurrentState(new PlayerStatePickupCard());
 	}
 
 	#endregion
