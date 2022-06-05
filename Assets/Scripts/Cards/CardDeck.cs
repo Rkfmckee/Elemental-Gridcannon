@@ -13,8 +13,6 @@ public class CardDeck : MonoBehaviour {
 	private Vector3 topOfDeckPosition;
 	private Vector3 pickupPosition;
 	private Vector3 pickupRotation;
-	private List<CardValue> enemyValues;
-	private List<CardValue> specialValues;
 
 	#endregion
 
@@ -24,9 +22,6 @@ public class CardDeck : MonoBehaviour {
 		topOfDeckPosition = new Vector3(0, 0.2f, 0);
 		pickupPosition = new Vector3(1.5f, 2, -2.5f);
 		pickupRotation = new Vector3(-30, 0, 0);
-
-		enemyValues = new List<CardValue> { CardValue.Jack, CardValue.Queen, CardValue.King };
-		specialValues = new List<CardValue> { CardValue.Ace };
 
 		FillDeckWithCards();
 	}

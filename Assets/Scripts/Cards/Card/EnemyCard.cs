@@ -67,6 +67,10 @@ public class EnemyCard : Card {
 
 		// First make sure at least one of the slots has a card
 		foreach(var slot in slots) {
+			if (ShouldIgnoreSlot(slot)) {
+				continue;
+			}
+
 			if (slot.GetCards().Count > 0) {
 				highestSlotValue = (CardValue?) slot.GetTopCard().GetCardType().GetValue();
 				break;
@@ -81,6 +85,10 @@ public class EnemyCard : Card {
 		// Otherwise, at least one slot has a card
 		foreach(var slot in slots) {
 			if (ShouldIgnoreSlot(slot)) {
+				continue;
+			}
+
+			if (slot.GetCards().Count == 0) {
 				continue;
 			}
 
