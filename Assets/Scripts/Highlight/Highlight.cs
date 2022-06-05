@@ -13,7 +13,7 @@ public class Highlight : MonoBehaviour {
 		outline = gameObject.AddComponent<Outline>();
 
 		outline.OutlineMode = Outline.Mode.OutlineAndSilhouette;
-		outline.OutlineColor = Color.red;
+		outline.OutlineColor = Color.yellow;
 		outline.OutlineWidth = 10;
 		outline.enabled = false;
 	}

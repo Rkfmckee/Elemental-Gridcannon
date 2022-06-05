@@ -10,18 +10,22 @@ public class CardDeck : MonoBehaviour {
 	#region Properties
 
 	private List<(CardSuit, CardValue)> cardsInDeck;
-	private Vector3 topOfDeckPosition;
+	private Vector3 spawnPosition;
+	private Vector3 outOfBoxPosition;
 	private Vector3 pickupPosition;
 	private Vector3 pickupRotation;
+	private Vector3 spawnRotation;
 
 	#endregion
 
 	#region Events
 
 	private void Awake() {
-		topOfDeckPosition = new Vector3(0, 0.2f, 0);
-		pickupPosition = new Vector3(1.5f, 2, -2.5f);
-		pickupRotation = new Vector3(-30, 0, 0);
+		spawnPosition = new Vector3(0, 0.1f, 0);
+		outOfBoxPosition = new Vector3(5, 0, 0);
+		pickupPosition = new Vector3(1.4f, 3, -2.5f);
+		pickupRotation = new Vector3(-30, 0, 10);
+		spawnRotation = new Vector3(0, 0, -180);
 
 		FillDeckWithCards();
 	}
@@ -42,8 +46,8 @@ public class CardDeck : MonoBehaviour {
 		
 		var cardPrefab = Resources.Load<GameObject>($"Prefabs/Cards/{cardSuit}/{cardValue.GetDescription()}{cardSuit}");
 		var card = Instantiate(cardPrefab);
-		card.transform.position = transform.position + topOfDeckPosition;
-		card.transform.eulerAngles = new Vector3(0, 0, -180);
+		card.transform.position = transform.position + spawnPosition;
+		card.transform.eulerAngles = spawnRotation;
 
 		var cardController = card.GetComponent<Card>();
 		cardController.SetCardType(cardValue, cardSuit);
@@ -55,6 +59,13 @@ public class CardDeck : MonoBehaviour {
 	}
 
 	private IEnumerator PickupCard(Card card) {
+		card.MoveCard(outOfBoxPosition, spawnRotation, 0.5f, CardState.Stationary);
+
+		while (card.GetCurrentState() == CardState.Moving) {
+			// Wait until the card is out of box
+			yield return null;
+		}
+
 		card.MoveCard(pickupPosition, pickupRotation, 1, CardState.PickedUp);
 
 		while (card.GetCurrentState() == CardState.Moving) {

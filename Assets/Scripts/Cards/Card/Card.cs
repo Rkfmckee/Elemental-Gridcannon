@@ -73,7 +73,8 @@ public abstract class Card : MonoBehaviour {
 	public enum CardState {
 		Moving,
 		PickedUp,
-		Placed
+		Placed,
+		Stationary
 	}
 
 	#endregion
