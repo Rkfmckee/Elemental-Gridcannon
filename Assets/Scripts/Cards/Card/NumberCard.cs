@@ -2,8 +2,6 @@ public class NumberCard : Card {
 	#region Methods
 
 	public override void ActivateCard() {
-		print("Picked up number card");
-
 		var cardValue = cardType.GetValue();
 		var allSlots = References.Cards.Slots.number;
 		foreach(var slot in allSlots) {

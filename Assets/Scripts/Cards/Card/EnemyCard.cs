@@ -5,8 +5,6 @@ public class EnemyCard : Card {
 	#region Methods
 
 	public override void ActivateCard() {
-		print("Picked up enemy card");
-
 		var oppositeSuits = cardType.GetOppositeSuits();
 		var primaryOppositeSuit = oppositeSuits.Value.Item1;
 		var secondaryOppositeSuit = oppositeSuits.Value.Item2;
