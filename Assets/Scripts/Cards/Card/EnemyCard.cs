@@ -1,15 +1,17 @@
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using static CardType;
 
 public class EnemyCard : Card {
 	#region Methods
 
 	public override void ActivateCard() {
-		var oppositeSuits = cardType.GetOppositeSuits();
-		var primaryOppositeSuit = oppositeSuits.Value.Item1;
+		var oppositeSuits         = cardType.GetOppositeSuits();
+		var primaryOppositeSuit   = oppositeSuits.Value.Item1;
 		var secondaryOppositeSuit = oppositeSuits.Value.Item2;
 
-		var numberSlots = References.Cards.Slots.number;
+		var numberSlots  = References.Cards.Slots.number;
 		var slotsForType = new Dictionary<CardSuit, List<NumberCardSlot>> {
 			{ CardSuit.Air, new List<NumberCardSlot>() },
 			{ CardSuit.Earth, new List<NumberCardSlot>() },
@@ -54,6 +56,10 @@ public class EnemyCard : Card {
 		ActivateValidSlots(validEnemySlots);
 	}
 
+	public void SpawnEnemy() {
+		StartCoroutine(ShrinkCardAndSpawnEnemy());
+	}
+
 	private List<EnemyCardSlot> GetHighestValue(List<NumberCardSlot> slots) {
 		var validEnemySlots = new List<EnemyCardSlot>();
 		
@@ -90,7 +96,7 @@ public class EnemyCard : Card {
 				continue;
 			}
 
-			var cardValue = slot.GetTopCard().GetCardType().GetValue();
+			var cardValue  = slot.GetTopCard().GetCardType().GetValue();
 			var validSlots = GetEmptyEnemySlots(slot);
 			
 			if (cardValue > highestSlotValue) {
@@ -141,6 +147,39 @@ public class EnemyCard : Card {
 		}
 
 		References.playerController.SetCurrentState(new PlayerStatePlaceCard());
+	}
+
+	#endregion
+
+	#region Coroutines
+
+	private IEnumerator ShrinkCardAndSpawnEnemy() {
+		var enemyPrefab  = Resources.Load<GameObject>($"Prefabs/Enemy/{cardType.GetSuit()}Golem");
+		var shrinkRate   = 1;
+		var shrinkTarget = 0.2f;
+		var growTarget   = enemyPrefab.transform.localScale.magnitude;
+		
+		
+		while (GetCurrentState() == CardState.Moving) {
+			yield return null;
+		}
+
+		while (transform.localScale.magnitude > shrinkTarget) {
+			transform.localScale -= Vector3.one * shrinkRate * Time.deltaTime;
+			yield return null;
+		}
+
+		var enemy = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
+		enemy.transform.localScale = Vector3.one * shrinkTarget;
+
+		while(enemy.transform.localScale.magnitude < growTarget ) {
+			enemy.transform.localScale += Vector3.one * shrinkRate * Time.deltaTime;
+			yield return null;
+		}
+
+		enemy.transform.localScale = Vector3.one;
+
+		Destroy(gameObject);
 	}
 
 	#endregion

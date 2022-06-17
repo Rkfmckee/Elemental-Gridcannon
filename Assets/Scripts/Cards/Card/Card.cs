@@ -13,7 +13,7 @@ public abstract class Card : MonoBehaviour {
 
 	#region Events
 
-	private void Awake() {
+	protected virtual void Awake() {
 		cardType = new CardType();
 	}
 

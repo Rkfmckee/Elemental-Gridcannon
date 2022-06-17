@@ -74,6 +74,11 @@ public abstract class CardSlot : MonoBehaviour {
 		topCard = card;
 		cards.Add(card);
 		nextCardPosition.y += 0.01f;
+
+		var enemyCard = card.GetComponent<EnemyCard>();
+		if (enemyCard != null) {
+			enemyCard.SpawnEnemy();
+		}
 	}
 
 	public void HighlightDefault() {
