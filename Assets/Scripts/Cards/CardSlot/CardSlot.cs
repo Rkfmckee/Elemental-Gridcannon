@@ -7,7 +7,7 @@ public abstract class CardSlot : MonoBehaviour {
 
 	private bool canPlaceCard;
 	private Card topCard;
-	private List<Card> cards;
+	private Stack<Card> cards;
 	private Vector3 nextCardPosition;
 	private Vector3 cardRotation;
 	private Color defaultParticleMaterialColour;
@@ -22,7 +22,7 @@ public abstract class CardSlot : MonoBehaviour {
 		slotGlow = transform.Find("CardSlotGlow").gameObject;
 		particleSystems = slotGlow.GetComponentsInChildren<ParticleSystemRenderer>();
 
-		cards = new List<Card>();
+		cards = new Stack<Card>();
 		nextCardPosition = transform.position;
 		cardRotation = new Vector3(0, -90, 0);
 
@@ -61,7 +61,7 @@ public abstract class CardSlot : MonoBehaviour {
 			topCard = card;
 		}
 
-		public List<Card> GetCards() {
+		public Stack<Card> GetCards() {
 			return cards;
 		}
 
@@ -70,15 +70,25 @@ public abstract class CardSlot : MonoBehaviour {
 	public void AddCard(Card card) {
 		card.MoveCard(nextCardPosition, cardRotation, 1, CardState.Placed);
 		card.transform.parent = transform;
+		card.currentSlot = this;
 
 		topCard = card;
-		cards.Add(card);
+		cards.Push(card);
 		nextCardPosition.y += 0.01f;
 
 		var enemyCard = card.GetComponent<EnemyCard>();
 		if (enemyCard != null) {
 			enemyCard.SpawnEnemy();
 		}
+	}
+
+	public void RemoveCard() {
+		var removedCard = cards.Pop();
+		removedCard.transform.parent = null;
+		removedCard.currentSlot = null;
+		
+		topCard = cards.Peek();
+		nextCardPosition.y -= 0.01f;
 	}
 
 	public void HighlightDefault() {

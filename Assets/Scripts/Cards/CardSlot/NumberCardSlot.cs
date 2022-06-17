@@ -27,6 +27,10 @@ public class NumberCardSlot : CardSlot {
 		base.Awake();
 
 		References.Cards.Slots.number.Add(this);
+
+		foreach(var slot in adjacentEnemySlots) {
+			slot.SetAdjacentNumberSlot(this);
+		}
 	}
 
 	#endregion

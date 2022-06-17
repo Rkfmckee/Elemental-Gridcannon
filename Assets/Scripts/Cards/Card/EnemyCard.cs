@@ -154,11 +154,12 @@ public class EnemyCard : Card {
 	#region Coroutines
 
 	private IEnumerator ShrinkCardAndSpawnEnemy() {
-		var enemyPrefab  = Resources.Load<GameObject>($"Prefabs/Enemy/{cardType.GetSuit()}Golem");
-		var shrinkRate   = 1;
-		var shrinkTarget = 0.2f;
-		var growTarget   = enemyPrefab.transform.localScale.magnitude;
-		
+		var enemyPrefab   = Resources.Load<GameObject>($"Prefabs/Enemy/{cardType.GetSuit()}Golem");
+		var enemyCardSlot = currentSlot.GetComponent<EnemyCardSlot>();
+		var enemyFacing   = (currentSlot.transform.position - enemyCardSlot.GetAdjacentNumberSlot().transform.position).normalized;
+		var shrinkRate    = 1;
+		var shrinkTarget  = 0.2f;
+		var growTarget    = enemyPrefab.transform.localScale.magnitude;
 		
 		while (GetCurrentState() == CardState.Moving) {
 			yield return null;
@@ -171,6 +172,7 @@ public class EnemyCard : Card {
 
 		var enemy = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
 		enemy.transform.localScale = Vector3.one * shrinkTarget;
+		enemy.transform.rotation = Quaternion.LookRotation(enemyFacing);
 
 		while(enemy.transform.localScale.magnitude < growTarget ) {
 			enemy.transform.localScale += Vector3.one * shrinkRate * Time.deltaTime;
@@ -178,7 +180,6 @@ public class EnemyCard : Card {
 		}
 
 		enemy.transform.localScale = Vector3.one;
-
 		Destroy(gameObject);
 	}
 
