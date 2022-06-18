@@ -23,7 +23,7 @@ public class CardDeck : MonoBehaviour {
 	private void Awake() {
 		spawnPosition = new Vector3(0, 0.1f, 0);
 		outOfBoxPosition = new Vector3(5, 0, 0);
-		pickupPosition = new Vector3(1.7f, 2.5f, -3.2f);
+		pickupPosition = new Vector3(2, 2, -2.9f);
 		pickupRotation = new Vector3(-30, 0, 10);
 		spawnRotation = new Vector3(0, 0, -180);
 
