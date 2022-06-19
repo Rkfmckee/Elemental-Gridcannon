@@ -1,20 +1,23 @@
+using System.Linq;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour {
+public class GameController : MonoBehaviour {
 	#region Properties
 
-	private PlayerState currentState;
+	private GameState currentState;
 
 	#endregion
 
 	#region Events
 
 	private void Awake() {
-		References.playerController = this;
+		References.gameController = this;
 	}
 
 	private void Start() {
-		SetCurrentState(new PlayerStatePickupCard());
+		References.Cards.Slots.number = References.Cards.Slots.number.OrderBy(s => s.name).ToList();
+
+		SetCurrentState(new GameStateStartGame());
 	}
 
 	private void Update() {
@@ -28,11 +31,11 @@ public class PlayerController : MonoBehaviour {
 
 		#region Get/Set
 
-		public PlayerState GetCurrentState() {
+		public GameState GetCurrentState() {
 			return currentState;
 		}
 
-		public void SetCurrentState(PlayerState state) {
+		public void SetCurrentState(GameState state) {
 			CleanupPreviousState();
 			currentState = state;
 		}

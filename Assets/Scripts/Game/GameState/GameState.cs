@@ -1,21 +1,21 @@
 using UnityEngine;
 
-public abstract class PlayerState {
+public abstract class GameState {
 	#region Properties
 
 	protected int? highlightMask;
 	protected GameObject lastTarget;
 
 	protected GameObject gameObject;
-	protected PlayerController playerController;
+	protected GameController gameController;
 	protected Camera camera;
 
 	#endregion
 	
 	#region Constructor
 
-	public PlayerState() {
-		playerController = References.playerController;
+	public GameState() {
+		gameController = References.gameController;
 		camera = References.camera;
 
 		highlightMask = null;

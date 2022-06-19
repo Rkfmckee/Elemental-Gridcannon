@@ -17,7 +17,7 @@ public class NumberCard : Card {
 			}
 		}
 
-		References.playerController.SetCurrentState(new PlayerStatePlaceCard());
+		References.gameController.SetCurrentState(new GameStatePlaceCard());
 	}
 
 	#endregion

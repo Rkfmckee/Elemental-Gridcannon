@@ -77,18 +77,24 @@ public abstract class CardSlot : MonoBehaviour {
 		nextCardPosition.y += 0.01f;
 
 		var enemyCard = card.GetComponent<EnemyCard>();
-		if (enemyCard != null) {
+		if (enemyCard != null && this is EnemyCardSlot) {
 			enemyCard.SpawnEnemy();
 		}
 	}
 
-	public void RemoveCard() {
+	public Card RemoveCard() {
 		var removedCard = cards.Pop();
 		removedCard.transform.parent = null;
 		removedCard.currentSlot = null;
 		
-		topCard = cards.Peek();
+		if (cards.Count > 0) {
+			topCard = cards.Peek();
+		} else {
+			topCard = null;
+		}
+
 		nextCardPosition.y -= 0.01f;
+		return removedCard;
 	}
 
 	public void HighlightDefault() {

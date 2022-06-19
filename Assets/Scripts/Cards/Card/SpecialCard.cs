@@ -5,7 +5,7 @@ public class SpecialCard : Card {
 		var specialSlot = References.Cards.Slots.special;
 		specialSlot.AddCard(this);
 
-		References.playerController.SetCurrentState(new PlayerStatePickupCard());
+		References.gameController.SetCurrentState(new GameStatePickupCard());
 	}
 
 	#endregion

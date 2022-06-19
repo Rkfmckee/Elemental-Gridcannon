@@ -4,7 +4,21 @@ using UnityEngine;
 using static CardType;
 
 public class EnemyCard : Card {
+	#region Properties
+
+	private bool startGamePlacement;
+
+	#endregion
+	
 	#region Methods
+
+		#region Get/Set
+
+		public void SetStartGamePlacement(bool startGame) {
+			startGamePlacement = startGame;
+		}
+
+		#endregion
 
 	public override void ActivateCard() {
 		var oppositeSuits         = cardType.GetOppositeSuits();
@@ -48,7 +62,7 @@ public class EnemyCard : Card {
 
 			if (validSlot.GetCards().Count == 0) {
 				validSlot.AddCard(this);
-				References.playerController.SetCurrentState(new PlayerStatePickupCard());
+				if (!startGamePlacement) References.gameController.SetCurrentState(new GameStatePickupCard());
 				return;
 			}
 		}
@@ -146,7 +160,7 @@ public class EnemyCard : Card {
 			}
 		}
 
-		References.playerController.SetCurrentState(new PlayerStatePlaceCard());
+		if (!startGamePlacement) References.gameController.SetCurrentState(new GameStatePlaceCard());
 	}
 
 	#endregion
