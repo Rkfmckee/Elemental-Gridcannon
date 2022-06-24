@@ -5,6 +5,8 @@ public class GameStatePickupCard : GameState {
 
 	public GameStatePickupCard() : base() {
 		highlightMask = 1 << LayerMask.NameToLayer("CardDeck");
+
+		References.UI.gameState.SetText("Click deck to pick-up a card");
 	}
 
 	#endregion

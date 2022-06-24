@@ -5,6 +5,7 @@ public class GameStateStartGame : GameState {
 
 	public GameStateStartGame() : base() {
 		highlightMask = 1 << LayerMask.NameToLayer("CardDeck");
+		References.UI.gameState.SetText("Click deck to layout your gridcannon");
 	}
 
 	#endregion
@@ -14,6 +15,7 @@ public class GameStateStartGame : GameState {
 	protected override void LeftClicked(GameObject target) {
 		var cardDeck = target.GetComponent<CardDeck>();
 		cardDeck.LayoutInitialCards();
+		References.UI.gameState.ClearText();
 	}
 
 	#endregion

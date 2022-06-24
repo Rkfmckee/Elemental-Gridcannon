@@ -18,6 +18,8 @@ public class GameStatePlaceStartingEnemies : GameState {
 		tempEnemyCardSlot = References.Cards.Slots.tempEnemy;
 
 		card = tempEnemyCardSlot.PickupCard();
+		
+		References.UI.gameState.SetText("Place starting enemies");
 	}
 
 	#endregion

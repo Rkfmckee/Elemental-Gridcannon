@@ -105,8 +105,9 @@ public class CardDeck : MonoBehaviour {
 	#region Coroutines
 
 	private IEnumerator LayoutCards() {
-		var numberCardSlots = References.Cards.Slots.number;
-		var tempEnemyCardSlot    = References.Cards.Slots.tempEnemy;
+		var numberCardSlots   = References.Cards.Slots.number;
+		var specialCardSlot   = References.Cards.Slots.special;
+		var tempEnemyCardSlot = References.Cards.Slots.tempEnemy;
 
 		int i = 0;
 		while(i < numberCardSlots.Count) {
@@ -121,7 +122,7 @@ public class CardDeck : MonoBehaviour {
 			if (card is EnemyCard) {
 				tempEnemyCardSlot.AddCard(card);
 			} else if (card is SpecialCard) {
-				card.ActivateCard();
+				specialCardSlot.AddCard(card);
 			} else {
 				slot.AddCard(card);
 				i++;

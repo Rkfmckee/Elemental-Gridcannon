@@ -18,4 +18,9 @@ public static class References {
 			public static CardSlot special;
 		}
 	}
+
+	public static class UI {
+		public static CanvasUI canvas;
+		public static GameStateUI gameState;
+	}
 }

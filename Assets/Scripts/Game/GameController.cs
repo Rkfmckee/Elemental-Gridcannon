@@ -38,6 +38,10 @@ public class GameController : MonoBehaviour {
 		public void SetCurrentState(GameState state) {
 			CleanupPreviousState();
 			currentState = state;
+
+			if (state == null) {
+				References.UI.gameState.ClearText();
+			}
 		}
 
 		#endregion
