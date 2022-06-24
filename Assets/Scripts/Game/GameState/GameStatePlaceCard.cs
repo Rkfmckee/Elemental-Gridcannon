@@ -15,8 +15,8 @@ public class GameStatePlaceCard : GameState {
 
 	public GameStatePlaceCard() : base() {
 		highlightMask = 1 << LayerMask.NameToLayer("CardSlot");
-		card = References.Cards.currentCard;
-		cardSlots = References.Cards.Slots.active;
+		card          = References.Cards.currentCard;
+		cardSlots     = References.Cards.Slots.active;
 
 		References.UI.gameState.SetText("Click a slot to place the card");
 	}

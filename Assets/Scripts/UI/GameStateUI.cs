@@ -12,7 +12,7 @@ public class GameStateUI : MonoBehaviour {
 
 	private void Awake() {
 		References.UI.gameState = this;
-		textUI = GetComponent<TextMeshProUGUI>();
+		textUI                  = GetComponent<TextMeshProUGUI>();
 	}
 
 	#endregion

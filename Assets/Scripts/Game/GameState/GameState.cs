@@ -16,7 +16,7 @@ public abstract class GameState {
 
 	public GameState() {
 		gameController = References.gameController;
-		camera = References.camera;
+		camera         = References.camera;
 
 		highlightMask = null;
 	}

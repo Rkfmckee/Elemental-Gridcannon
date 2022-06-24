@@ -19,15 +19,15 @@ public abstract class CardSlot : MonoBehaviour {
 	#endregion
 
 	protected virtual void Awake() {
-		slotGlow = transform.Find("CardSlotGlow").gameObject;
+		slotGlow        = transform.Find("CardSlotGlow").gameObject;
 		particleSystems = slotGlow.GetComponentsInChildren<ParticleSystemRenderer>();
 
-		cards = new Stack<Card>();
+		cards            = new Stack<Card>();
 		nextCardPosition = transform.position;
-		cardRotation = new Vector3(0, -90, 0);
+		cardRotation     = new Vector3(0, -90, 0);
 
-		defaultParticleMaterialColour = particleSystems[0].material.GetColor("_TintColor");
-		translucentParticleMaterialColour = defaultParticleMaterialColour;
+		defaultParticleMaterialColour       = particleSystems[0].material.GetColor("_TintColor");
+		translucentParticleMaterialColour   = defaultParticleMaterialColour;
 		translucentParticleMaterialColour.a = 0.1f;
 
 		SetCanPlaceCard(false);
@@ -70,7 +70,7 @@ public abstract class CardSlot : MonoBehaviour {
 	public void AddCard(Card card) {
 		card.MoveCard(nextCardPosition, cardRotation, 1, CardState.Placed);
 		card.transform.parent = transform;
-		card.currentSlot = this;
+		card.currentSlot      = this;
 
 		topCard = card;
 		cards.Push(card);
@@ -83,9 +83,9 @@ public abstract class CardSlot : MonoBehaviour {
 	}
 
 	public Card RemoveCard() {
-		var removedCard = cards.Pop();
-		removedCard.transform.parent = null;
-		removedCard.currentSlot = null;
+		var removedCard                  = cards.Pop();
+		    removedCard.transform.parent = null;
+		    removedCard.currentSlot      = null;
 		
 		if (cards.Count > 0) {
 			topCard = cards.Peek();

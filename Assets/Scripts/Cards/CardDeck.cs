@@ -66,9 +66,9 @@ public class CardDeck : MonoBehaviour {
 	}
 
 	private void FillDeckWithCards() {
-		cardsInDeck = new List<(CardSuit, CardValue)>();
-		var allValues = Enum.GetValues(typeof(CardValue));
-		var allSuits = Enum.GetValues(typeof(CardSuit));
+		    cardsInDeck = new List<(CardSuit, CardValue)>();
+		var allValues   = Enum.GetValues(typeof(CardValue));
+		var allSuits    = Enum.GetValues(typeof(CardSuit));
 
 		foreach(var suit in allSuits) {
 			var cardSuit = (CardSuit) suit;
@@ -78,20 +78,21 @@ public class CardDeck : MonoBehaviour {
 			}
 		}
 
-		var random = new System.Random();
-        var randomized = cardsInDeck.OrderBy(item => random.Next());
-		cardsInDeck = randomized.ToList();
+		var random      = new System.Random();
+		var randomized  = cardsInDeck.OrderBy(item => random.Next());
+		    cardsInDeck = randomized.ToList();
 	}
 
 	private Card SpawnNextCard() {
 		var cardToPick = cardsInDeck[0];
+		var cardSuit   = cardToPick.Item1;
+		var cardValue  = cardToPick.Item2;
 		cardsInDeck.RemoveAt(0);
-		var cardSuit = cardToPick.Item1;
-		var cardValue = cardToPick.Item2;
 		
-		var cardPrefab = Resources.Load<GameObject>($"Prefabs/Cards/{cardSuit}/{cardValue.GetDescription()}{cardSuit}");
-		var card = Instantiate(cardPrefab);
-		card.transform.position = transform.position + spawnPosition;
+		var cardPrefab                 = Resources.Load<GameObject>($"Prefabs/Cards/{cardSuit}/{cardValue.GetDescription()}{cardSuit}");
+		var card                       = Instantiate(cardPrefab);
+
+		card.transform.position    = transform.position + spawnPosition;
 		card.transform.eulerAngles = spawnRotation;
 
 		var cardController = card.GetComponent<Card>();

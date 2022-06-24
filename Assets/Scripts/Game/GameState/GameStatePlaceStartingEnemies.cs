@@ -14,10 +14,9 @@ public class GameStatePlaceStartingEnemies : GameState {
 	#region Constructor
 
 	public GameStatePlaceStartingEnemies() : base() {
-		highlightMask = 1 << LayerMask.NameToLayer("CardSlot");
+		highlightMask     = 1 << LayerMask.NameToLayer("CardSlot");
 		tempEnemyCardSlot = References.Cards.Slots.tempEnemy;
-
-		card = tempEnemyCardSlot.PickupCard();
+		card              = tempEnemyCardSlot.PickupCard();
 		
 		References.UI.gameState.SetText("Place starting enemies");
 	}

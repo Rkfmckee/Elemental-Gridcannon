@@ -50,7 +50,7 @@ public abstract class Card : MonoBehaviour {
 	}
 
 	private IEnumerator MovePositionAndRotation(Vector3 startPosition, Vector3 finishPosition, Quaternion finishRotation, float timeToMove, CardState finishState) {
-		currentState = CardState.Moving;
+		    currentState  = CardState.Moving;
 		var startRotation = transform.rotation;
 		
 		while (movementTimer < timeToMove) {
@@ -64,7 +64,7 @@ public abstract class Card : MonoBehaviour {
 		transform.position = finishPosition;
 		transform.rotation = finishRotation;
 	
-		currentState = finishState;
+		currentState  = finishState;
 		movementTimer = 0;
 	}
 
