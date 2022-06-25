@@ -54,6 +54,12 @@ public class GameStatePlaceCard : GameState {
 		gameController.SetCurrentState(new GameStatePickupCard());
 	}
 
+	protected override bool ShouldEnableHighlight(GameObject target)
+	{
+		var cardSlot = target.GetComponent<CardSlot>();
+		return cardSlot.CanPlaceCard();
+	}
+
 	protected override void EnableHighlight(GameObject target) {
 		target.GetComponent<CardSlot>().HighlightDefault();
 	}

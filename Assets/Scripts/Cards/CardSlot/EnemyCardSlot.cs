@@ -1,7 +1,10 @@
+using UnityEngine;
+
 public class EnemyCardSlot : CardSlot {
 	#region Properties
 
 	private NumberCardSlot adjacentNumberSlot;
+	private Color targetColour;
 
 	#endregion
 	
@@ -11,18 +14,38 @@ public class EnemyCardSlot : CardSlot {
 		base.Awake();
 
 		References.Cards.Slots.enemy.Add(this);
+
+		targetColour = Color.red;
 	}
 
 	#endregion
 
-	#region Get/Set Methods
+	#region Methods
 
-	public NumberCardSlot GetAdjacentNumberSlot() {
-		return adjacentNumberSlot;
+		#region Get/Set
+
+		public NumberCardSlot GetAdjacentNumberSlot() {
+			return adjacentNumberSlot;
+		}
+
+		public void SetAdjacentNumberSlot(NumberCardSlot slot) {
+			adjacentNumberSlot = slot;
+		}
+
+		#endregion
+
+	public void HighlightTarget() {
+		ShowCardSlot(true);
+
+		foreach(var particleSystem in particleSystems) {
+			particleSystem.material.SetColor("_TintColor", targetColour);
+		}
 	}
 
-	public void SetAdjacentNumberSlot(NumberCardSlot slot) {
-		adjacentNumberSlot = slot;
+	public void UnhighlightTarget() {
+		ShowCardSlot(false);
+
+		HighlightTranslucent();
 	}
 
 	#endregion

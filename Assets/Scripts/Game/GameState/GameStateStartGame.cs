@@ -15,7 +15,8 @@ public class GameStateStartGame : GameState {
 	protected override void LeftClicked(GameObject target) {
 		var cardDeck = target.GetComponent<CardDeck>();
 		cardDeck.LayoutInitialCards();
-		References.UI.gameState.ClearText();
+		
+		References.gameController.SetCurrentState(null);
 	}
 
 	#endregion

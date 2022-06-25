@@ -41,6 +41,10 @@ public abstract class GameState {
 
 	protected abstract void LeftClicked(GameObject target);
 
+	protected virtual bool ShouldEnableHighlight(GameObject target) {
+		return true;
+	}
+
 	protected virtual void EnableHighlight(GameObject target) {
 		target.GetComponent<Highlight>().EnableOutline(true);
 	}
@@ -61,7 +65,7 @@ public abstract class GameState {
 				return;
 			}
 
-			if (currentTarget != lastTarget) {
+			if ((currentTarget != lastTarget) && ShouldEnableHighlight(currentTarget)) {
 				ClearLastHighlight();
 				EnableHighlight(currentTarget);
 				lastTarget = currentTarget;

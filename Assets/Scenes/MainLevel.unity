@@ -157,12 +157,12 @@ Transform:
   - {fileID: 992366472}
   - {fileID: 1914023693}
   - {fileID: 1603149972}
-  - {fileID: 1872518101}
-  - {fileID: 977958725}
   - {fileID: 424217914}
-  - {fileID: 787331309}
-  - {fileID: 248822957}
+  - {fileID: 977958725}
+  - {fileID: 1872518101}
   - {fileID: 85632427}
+  - {fileID: 248822957}
+  - {fileID: 787331309}
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -220,6 +220,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 453473172006444084, guid: 917da5b2ea79f1f42aa07cd320e218a8, type: 3}
   m_PrefabInstance: {fileID: 73113665}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &73113667 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 281684276077323467, guid: 917da5b2ea79f1f42aa07cd320e218a8, type: 3}
+  m_PrefabInstance: {fileID: 73113665}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ad840ee67540374493c3d05cd8d3d5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &85632426
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -229,11 +240,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4483746889002140163, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_Name
-      value: EnemyCardSlot
+      value: EnemyCardSlot_10
       objectReference: {fileID: 0}
     - target: {fileID: 4483746889002140191, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4483746889002140191, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -275,7 +286,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4483746889002140163, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_Name
-      value: EnemyCardSlot
+      value: EnemyCardSlot_11
       objectReference: {fileID: 0}
     - target: {fileID: 4483746889002140191, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_RootOrder
@@ -539,7 +550,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Current Game State
+  m_text: Current game state
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -693,7 +704,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4483746889002140163, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_Name
-      value: EnemyCardSlot
+      value: EnemyCardSlot_3
       objectReference: {fileID: 0}
     - target: {fileID: 4483746889002140191, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_RootOrder
@@ -806,7 +817,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4483746889002140163, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_Name
-      value: EnemyCardSlot
+      value: EnemyCardSlot_1
       objectReference: {fileID: 0}
     - target: {fileID: 4483746889002140191, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_RootOrder
@@ -863,7 +874,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4483746889002140163, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_Name
-      value: EnemyCardSlot
+      value: EnemyCardSlot_8
       objectReference: {fileID: 0}
     - target: {fileID: 4483746889002140191, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_RootOrder
@@ -904,11 +915,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4483746889002140163, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_Name
-      value: EnemyCardSlot
+      value: EnemyCardSlot_7
       objectReference: {fileID: 0}
     - target: {fileID: 4483746889002140191, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4483746889002140191, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1111,11 +1122,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4483746889002140163, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_Name
-      value: EnemyCardSlot
+      value: EnemyCardSlot_12
       objectReference: {fileID: 0}
     - target: {fileID: 4483746889002140191, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 4483746889002140191, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1270,7 +1281,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4483746889002140163, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_Name
-      value: EnemyCardSlot
+      value: EnemyCardSlot_4
       objectReference: {fileID: 0}
     - target: {fileID: 4483746889002140191, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_RootOrder
@@ -1409,6 +1420,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31e711729828d63479cadc7d976d8ce5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1072491711 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 281684276077323467, guid: 917da5b2ea79f1f42aa07cd320e218a8, type: 3}
+  m_PrefabInstance: {fileID: 371823572}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ad840ee67540374493c3d05cd8d3d5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1145762613
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1417,9 +1439,29 @@ PrefabInstance:
     m_TransformParent: {fileID: 397912619}
     m_Modifications:
     - target: {fileID: 281684276077323467, guid: 917da5b2ea79f1f42aa07cd320e218a8, type: 3}
+      propertyPath: ammunitionSlots.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 281684276077323467, guid: 917da5b2ea79f1f42aa07cd320e218a8, type: 3}
+      propertyPath: targetEnemySlots.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 281684276077323467, guid: 917da5b2ea79f1f42aa07cd320e218a8, type: 3}
       propertyPath: adjacentEnemySlots.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 281684276077323467, guid: 917da5b2ea79f1f42aa07cd320e218a8, type: 3}
+      propertyPath: ammunitionSlots.Array.data[0]
+      value: 
+      objectReference: {fileID: 1958997969}
+    - target: {fileID: 281684276077323467, guid: 917da5b2ea79f1f42aa07cd320e218a8, type: 3}
+      propertyPath: ammunitionSlots.Array.data[1]
+      value: 
+      objectReference: {fileID: 73113667}
+    - target: {fileID: 281684276077323467, guid: 917da5b2ea79f1f42aa07cd320e218a8, type: 3}
+      propertyPath: targetEnemySlots.Array.data[0]
+      value: 
+      objectReference: {fileID: 977958726}
     - target: {fileID: 281684276077323467, guid: 917da5b2ea79f1f42aa07cd320e218a8, type: 3}
       propertyPath: adjacentEnemySlots.Array.data[0]
       value: 
@@ -1472,11 +1514,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4483746889002140163, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_Name
-      value: EnemyCardSlot
+      value: EnemyCardSlot_9
       objectReference: {fileID: 0}
     - target: {fileID: 4483746889002140191, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4483746889002140191, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1890,6 +1932,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 453473172006444084, guid: 917da5b2ea79f1f42aa07cd320e218a8, type: 3}
   m_PrefabInstance: {fileID: 1516295097}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1516295099 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 281684276077323467, guid: 917da5b2ea79f1f42aa07cd320e218a8, type: 3}
+  m_PrefabInstance: {fileID: 1516295097}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ad840ee67540374493c3d05cd8d3d5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1593059692
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1957,7 +2010,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4483746889002140163, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_Name
-      value: EnemyCardSlot
+      value: EnemyCardSlot_6
       objectReference: {fileID: 0}
     - target: {fileID: 4483746889002140191, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_RootOrder
@@ -2111,9 +2164,33 @@ PrefabInstance:
     m_TransformParent: {fileID: 397912619}
     m_Modifications:
     - target: {fileID: 281684276077323467, guid: 917da5b2ea79f1f42aa07cd320e218a8, type: 3}
+      propertyPath: ammunitionSlots.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 281684276077323467, guid: 917da5b2ea79f1f42aa07cd320e218a8, type: 3}
+      propertyPath: targetEnemySlots.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 281684276077323467, guid: 917da5b2ea79f1f42aa07cd320e218a8, type: 3}
       propertyPath: adjacentEnemySlots.Array.size
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 281684276077323467, guid: 917da5b2ea79f1f42aa07cd320e218a8, type: 3}
+      propertyPath: ammunitionSlots.Array.data[0]
+      value: 
+      objectReference: {fileID: 1072491711}
+    - target: {fileID: 281684276077323467, guid: 917da5b2ea79f1f42aa07cd320e218a8, type: 3}
+      propertyPath: ammunitionSlots.Array.data[1]
+      value: 
+      objectReference: {fileID: 1516295099}
+    - target: {fileID: 281684276077323467, guid: 917da5b2ea79f1f42aa07cd320e218a8, type: 3}
+      propertyPath: targetEnemySlots.Array.data[0]
+      value: 
+      objectReference: {fileID: 1662802921}
+    - target: {fileID: 281684276077323467, guid: 917da5b2ea79f1f42aa07cd320e218a8, type: 3}
+      propertyPath: targetEnemySlots.Array.data[1]
+      value: 
+      objectReference: {fileID: 1872518102}
     - target: {fileID: 281684276077323467, guid: 917da5b2ea79f1f42aa07cd320e218a8, type: 3}
       propertyPath: adjacentEnemySlots.Array.data[0]
       value: 
@@ -2197,7 +2274,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4483746889002140163, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_Name
-      value: EnemyCardSlot
+      value: EnemyCardSlot_5
       objectReference: {fileID: 0}
     - target: {fileID: 4483746889002140191, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_RootOrder
@@ -2291,6 +2368,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 453473172006444084, guid: 917da5b2ea79f1f42aa07cd320e218a8, type: 3}
   m_PrefabInstance: {fileID: 1958997967}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1958997969 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 281684276077323467, guid: 917da5b2ea79f1f42aa07cd320e218a8, type: 3}
+  m_PrefabInstance: {fileID: 1958997967}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ad840ee67540374493c3d05cd8d3d5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2041565439
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2300,7 +2388,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4483746889002140163, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_Name
-      value: EnemyCardSlot
+      value: EnemyCardSlot_2
       objectReference: {fileID: 0}
     - target: {fileID: 4483746889002140191, guid: 874c696994ffd2547ab0f6d0878b1eb6, type: 3}
       propertyPath: m_RootOrder

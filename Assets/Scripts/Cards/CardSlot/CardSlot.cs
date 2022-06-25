@@ -10,11 +10,11 @@ public abstract class CardSlot : MonoBehaviour {
 	private Stack<Card> cards;
 	private Vector3 nextCardPosition;
 	private Vector3 cardRotation;
-	private Color defaultParticleMaterialColour;
-	private Color translucentParticleMaterialColour;
+	private Color defaultParticleColour;
+	private Color translucentParticleColour;
 
+	protected ParticleSystemRenderer[] particleSystems;
 	private GameObject slotGlow;
-	private ParticleSystemRenderer[] particleSystems;
 
 	#endregion
 
@@ -26,9 +26,9 @@ public abstract class CardSlot : MonoBehaviour {
 		nextCardPosition = transform.position;
 		cardRotation     = new Vector3(0, -90, 0);
 
-		defaultParticleMaterialColour       = particleSystems[0].material.GetColor("_TintColor");
-		translucentParticleMaterialColour   = defaultParticleMaterialColour;
-		translucentParticleMaterialColour.a = 0.1f;
+		defaultParticleColour       = particleSystems[0].material.GetColor("_TintColor");
+		translucentParticleColour   = defaultParticleColour;
+		translucentParticleColour.a = 0.1f;
 
 		SetCanPlaceCard(false);
 		HighlightTranslucent();
@@ -44,13 +44,9 @@ public abstract class CardSlot : MonoBehaviour {
 
 		public void SetCanPlaceCard(bool canPlace) {
 			canPlaceCard = canPlace;
+			ShowCardSlot(canPlace);
 
-			if (canPlace) {
-				slotGlow.transform.localPosition = Vector3.zero;
-				References.Cards.Slots.active.Add(this);
-			} else {
-				slotGlow.transform.localPosition = Vector3.down;
-			}
+			if (canPlace) References.Cards.Slots.active.Add(this);
 		}
 
 		public Card GetTopCard() {
@@ -99,13 +95,23 @@ public abstract class CardSlot : MonoBehaviour {
 
 	public void HighlightDefault() {
 		foreach(var particleSystem in particleSystems) {
-			particleSystem.material.SetColor("_TintColor", defaultParticleMaterialColour);
+			particleSystem.material.SetColor("_TintColor", defaultParticleColour);
 		}
 	}
 
 	public void HighlightTranslucent() {
 		foreach(var particleSystem in particleSystems) {
-			particleSystem.material.SetColor("_TintColor", translucentParticleMaterialColour);
+			particleSystem.material.SetColor("_TintColor", translucentParticleColour);
+		}
+	}
+
+	protected void ShowCardSlot(bool show) {
+		if (show) {
+			slotGlow.transform.localPosition = Vector3.zero;
+		}
+		else
+		{
+			slotGlow.transform.localPosition = Vector3.down;
 		}
 	}
 
