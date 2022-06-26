@@ -184,17 +184,18 @@ public class EnemyCard : Card {
 			yield return null;
 		}
 
-		var enemy = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
+		var enemy                  = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
 		enemy.transform.localScale = Vector3.one * shrinkTarget;
-		enemy.transform.rotation = Quaternion.LookRotation(enemyFacing);
+		enemy.transform.rotation   = Quaternion.LookRotation(enemyFacing);
 
 		while(enemy.transform.localScale.magnitude < growTarget ) {
 			enemy.transform.localScale += Vector3.one * shrinkRate * Time.deltaTime;
 			yield return null;
 		}
 
+		HideCard(true);
 		enemy.transform.localScale = Vector3.one;
-		Destroy(gameObject);
+		transform.localScale       = Vector3.one;
 	}
 
 	#endregion
