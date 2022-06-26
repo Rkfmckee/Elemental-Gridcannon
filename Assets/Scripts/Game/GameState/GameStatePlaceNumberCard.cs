@@ -11,21 +11,28 @@ public class GameStatePlaceNumberCard : GameStatePlaceCard
 
 	#region Methods
 
-	// protected override void NextState()
-	// {
+	protected override void NextState()
+	{
+		if (cannonShots.Count == 0) base.NextState();
 
-	// }
+		var cannonPrefab   = Resources.Load<GameObject>("Prefabs/Cannon/Cannon");
+		var cannonPosition = cannonShots[0].cannonSlot.transform.position + Vector3.down;
+		var cannon         = GameObject.Instantiate(cannonPrefab, cannonPosition, Quaternion.identity);
+		
+		cannon.GetComponent<Cannon>().SetupShot(cannonShots);
+	}
 
 	protected override void EnableHighlight(GameObject target)
 	{
 		base.EnableHighlight(target);
 
 		var numberSlot = target.GetComponent<NumberCardSlot>();
-		cannonShots    = numberSlot.GetCannonShots();
+		cannonShots    = new List<CannonShot>();
 
-		foreach (var cannonShot in cannonShots)
+		foreach (var cannonShot in numberSlot.GetCannonShots())
 		{
 			if (cannonShot.targetSlot.GetCards().Count == 0) continue;
+			cannonShots.Add(cannonShot);
 
 			foreach (var ammunition in cannonShot.ammunitionSlots)
 			{

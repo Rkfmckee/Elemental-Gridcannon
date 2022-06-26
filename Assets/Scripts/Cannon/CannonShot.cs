@@ -1,6 +1,7 @@
 public class CannonShot {
 	#region Properties
 
+	public NumberCardSlot cannonSlot;
 	public NumberCardSlot[] ammunitionSlots;
 	public EnemyCardSlot targetSlot;
 
@@ -8,9 +9,10 @@ public class CannonShot {
 
 	#region Constructors
 
-	public CannonShot(NumberCardSlot[] ammunition, EnemyCardSlot target) {
+	public CannonShot(NumberCardSlot cannon, NumberCardSlot[] ammunition, EnemyCardSlot target) {
+		cannonSlot      = cannon;
 		ammunitionSlots = ammunition;
-		targetSlot = target;
+		targetSlot      = target;
 	}
 
 	#endregion

@@ -31,16 +31,17 @@ public partial class NumberCardSlot : CardSlot
 
 		for (int i = 0; i < ammunitionAndTargetIds.GetLength(0); i++)
 		{
-			var cannonId      = ammunitionAndTargetIds[i, 0];
+			var cannonId = ammunitionAndTargetIds[i, 0];
 			if (currentCannonId != cannonId) continue;
 
+			var cannon     = GameObject.Find($"NumberCardSlot_{cannonId}").GetComponent<NumberCardSlot>();
+			var target     = GameObject.Find($"EnemyCardSlot_{ammunitionAndTargetIds[i, 3]}").GetComponent<EnemyCardSlot>();
 			var ammunition = new NumberCardSlot[] {
 				GameObject.Find($"NumberCardSlot_{ammunitionAndTargetIds[i, 1]}").GetComponent<NumberCardSlot>(),
 				GameObject.Find($"NumberCardSlot_{ammunitionAndTargetIds[i, 2]}").GetComponent<NumberCardSlot>()
 			};
-			var target = GameObject.Find($"EnemyCardSlot_{ammunitionAndTargetIds[i, 3]}").GetComponent<EnemyCardSlot>();
 
-			cannonShots.Add(new CannonShot(ammunition, target));
+			cannonShots.Add(new CannonShot(cannon, ammunition, target));
 		}
 
 		ammunitionColour = Color.green;
