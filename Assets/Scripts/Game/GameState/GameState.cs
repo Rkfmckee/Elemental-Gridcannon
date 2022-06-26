@@ -41,6 +41,8 @@ public abstract class GameState {
 
 	protected abstract void LeftClicked(GameObject target);
 
+	protected abstract void NextState();
+
 	protected virtual bool ShouldEnableHighlight(GameObject target) {
 		return true;
 	}

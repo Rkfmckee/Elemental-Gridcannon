@@ -1,14 +1,29 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public class GameStatePlaceNumberCard : GameStatePlaceCard {
+public class GameStatePlaceNumberCard : GameStatePlaceCard
+{
+	#region Properties
+
+	private List<CannonShot> cannonShots;
+
+	#endregion
+
 	#region Methods
 
-	protected override void EnableHighlight(GameObject target) {
+	// protected override void NextState()
+	// {
+
+	// }
+
+	protected override void EnableHighlight(GameObject target)
+	{
 		base.EnableHighlight(target);
 
 		var numberSlot = target.GetComponent<NumberCardSlot>();
+		cannonShots    = numberSlot.GetCannonShots();
 
-		foreach (var cannonShot in numberSlot.GetCannonShots())
+		foreach (var cannonShot in cannonShots)
 		{
 			if (cannonShot.targetSlot.GetCards().Count == 0) continue;
 
@@ -21,7 +36,8 @@ public class GameStatePlaceNumberCard : GameStatePlaceCard {
 		}
 	}
 
-	protected override void DisableHighlight(GameObject target) {
+	protected override void DisableHighlight(GameObject target)
+	{
 		base.DisableHighlight(target);
 
 		var numberSlot = target.GetComponent<NumberCardSlot>();

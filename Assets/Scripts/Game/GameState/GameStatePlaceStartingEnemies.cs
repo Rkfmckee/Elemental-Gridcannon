@@ -32,7 +32,7 @@ public class GameStatePlaceStartingEnemies : GameState {
 			if (tempEnemyCardSlot.GetCards().Count > 0) {
 				card = tempEnemyCardSlot.PickupCard();
 			} else {
-				gameController.SetCurrentState(new GameStatePickupCard());
+				NextState();
 			}
 		}
 	}
@@ -59,6 +59,11 @@ public class GameStatePlaceStartingEnemies : GameState {
 
 		cardSlot.AddCard(card);
 		CleanupState();
+	}
+
+	protected override void NextState()
+	{
+		gameController.SetCurrentState(new GameStatePickupCard());
 	}
 
 	protected override void EnableHighlight(GameObject target) {

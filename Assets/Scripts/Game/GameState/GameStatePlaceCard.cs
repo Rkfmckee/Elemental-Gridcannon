@@ -51,6 +51,11 @@ public class GameStatePlaceCard : GameState {
 
 		cardSlot.AddCard(card);
 		References.Cards.currentCard = null;
+		NextState();
+	}
+
+	protected override void NextState()
+	{
 		gameController.SetCurrentState(new GameStatePickupCard());
 	}
 

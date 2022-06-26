@@ -16,7 +16,12 @@ public class GameStateStartGame : GameState {
 		var cardDeck = target.GetComponent<CardDeck>();
 		cardDeck.LayoutInitialCards();
 		
-		References.gameController.SetCurrentState(null);
+		NextState();
+	}
+
+	protected override void NextState()
+	{
+		gameController.SetCurrentState(null);
 	}
 
 	#endregion

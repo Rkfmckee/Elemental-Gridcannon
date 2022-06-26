@@ -25,8 +25,13 @@ public class GameStatePickupCard : GameState {
 		var cardDeck = target.GetComponent<CardDeck>();
 
 		if (cardDeck.PickupCard()) {
-			gameController.SetCurrentState(null);
+			NextState();
 		}
+	}
+
+	protected override void NextState()
+	{
+		gameController.SetCurrentState(null);
 	}
 
 	#endregion
