@@ -18,6 +18,8 @@ public class GameStatePlaceNumberCard : GameStatePlaceCard
 			return;
 		}
 
+		gameController.SetCurrentState(null);
+
 		var cannonPrefab   = Resources.Load<GameObject>("Prefabs/Cannon/Cannon");
 		var cannonObject   = GameObject.Instantiate(cannonPrefab);
 		var cannon         = cannonObject.GetComponent<Cannon>();

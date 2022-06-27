@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static AttackOrb;
+using static Card;
 
 public class Cannon : MonoBehaviour
 {
@@ -49,106 +50,123 @@ public class Cannon : MonoBehaviour
 		StartCoroutine(SetupShot());
 	}
 
+	private List<AttackOrb> CreateAttackOrbs(NumberCardSlot[] ammunitionSlots) {
+		var attackOrbPrefab = Resources.Load<GameObject>("Prefabs/Cannon/AttackOrb");
+		var attackOrbs      = new List<AttackOrb>();
+
+		foreach (var ammunitionSlot in ammunitionSlots)
+		{
+			var topCard = ammunitionSlot.GetTopCard();
+			if (topCard == null) continue;
+			
+			var attackOrbPosition = ammunitionSlot.transform.position + GetSpawnHeightOffset();
+			var attackOrbRotation = Quaternion.identity;
+			var attackOrbObject   = Instantiate(attackOrbPrefab, attackOrbPosition, attackOrbRotation);
+			var attackOrb         = attackOrbObject.GetComponent<AttackOrb>();
+			
+			var cardValue    = topCard.GetCardType().GetValue().GetDescription();
+			var cardSuit     = topCard.GetCardType().GetSuit().GetDescription();
+			var damageAmount = Int32.Parse(cardValue);
+			var damageType   = (DamageType) Enum.Parse(typeof(DamageType), cardSuit);
+
+			attackOrb.SetDamage(damageAmount, damageType);
+			attackOrbs.Add(attackOrb);
+		}
+
+		return attackOrbs;
+	}
+
 	#endregion
 
 	#region Coroutines
 
 	public IEnumerator SetupShot()
 	{
-		// For each cannon shot
 		foreach (var cannonShot in cannonShots)
 		{
-			// Rotate cannon towards correct target
-			var currentRotation  = transform.rotation;
 			var targetPosition   = cannonShot.targetSlot.transform.position;
 			targetPosition.y 	 = transform.position.y;
-			var rotationToTarget = Quaternion.LookRotation((targetPosition - transform.position).normalized);
-			var rotationTimer    = 0f;
+			yield return StartCoroutine(RotateCannon(targetPosition));
 
-			while(Quaternion.Angle(transform.rotation, rotationToTarget) > 1) {
-				transform.rotation  = Quaternion.Lerp(currentRotation, rotationToTarget, rotationTimer / rotationTime);
-				rotationTimer      += Time.deltaTime;
+			var ammunitionSlots = cannonShot.ammunitionSlots;
+			var attackOrbs = CreateAttackOrbs(ammunitionSlots);
 
-				yield return null;
-			}
+			yield return StartCoroutine(RaiseUpCannonAndAmmunition(attackOrbs));
 
-			// Create ammunition shots and set damage type and value
-			var attackOrbPrefab = Resources.Load<GameObject>("Prefabs/Cannon/AttackOrb");
-			var attackOrbs      = new List<AttackOrb>();
-
-			foreach (var ammunitionSlot in cannonShot.ammunitionSlots)
-			{
-				var topCard = ammunitionSlot.GetTopCard();
-				if (topCard == null) continue;
-				
-				var attackOrbPosition = ammunitionSlot.transform.position + GetSpawnHeightOffset();
-				var attackOrbRotation = Quaternion.identity;
-				var attackOrbObject   = Instantiate(attackOrbPrefab, attackOrbPosition, attackOrbRotation);
-				var attackOrb         = attackOrbObject.GetComponent<AttackOrb>();
-				
-				var cardValue    = topCard.GetCardType().GetValue().GetDescription();
-				var cardSuit     = topCard.GetCardType().GetSuit().GetDescription();
-				var damageAmount = Int32.Parse(cardValue);
-				var damageType   = (DamageType) Enum.Parse(typeof(DamageType), cardSuit);
-
-				attackOrb.SetDamage(damageAmount, damageType);
-				attackOrbs.Add(attackOrb);
-			}
-
-			// Raise up cannon and ammunition if needed
-			var positionTimer  = 0f;
-			var newHeight = spawnHeight;
-			
-			while(newHeight < cannonHeight) {
-				// Cannon height
-				newHeight = Mathf.Lerp(spawnHeight, cannonHeight, positionTimer / heightRaiseTime);
-
-				if (transform.position.y < cannonHeight) {
-					// Only raise cannon for first cannonShot
-					var newCannonPosition = transform.position;
-					newCannonPosition.y   = newHeight;
-					transform.position    = newCannonPosition;
-				}
-
-				// Attack orb height
-				foreach (var attackOrb in attackOrbs)
-				{
-					var newOrbPosition 			 = attackOrb.transform.position;
-					newOrbPosition.y   			 = newHeight;
-					attackOrb.transform.position = newOrbPosition;
-				}
-
-				positionTimer += Time.deltaTime;
-				yield return null;
-			}
-
-			// Bring ammunition back towards cannon
+			// Load ammunition
 			var loadFinishPosition  = transform.position;
-			var loadAmmunitionTimer = 0f;
-
-			while(Vector3.Distance(attackOrbs[0].transform.position, loadFinishPosition) > 0.1f) {
-				foreach (var attackOrb in attackOrbs)
-				{
-					attackOrb.transform.position  = Vector3.Lerp(attackOrb.transform.position, loadFinishPosition, loadAmmunitionTimer / loadAmmunitionTime);
-					loadAmmunitionTimer          += Time.deltaTime;
-					yield return null;
-				}
-			}
+			yield return StartCoroutine(MoveOrbPosition(attackOrbs, loadFinishPosition, loadAmmunitionTime));
 
 			yield return new WaitForSeconds(0.5f);
 
-			// Fire at target
+			// Fire!
 			var fireFinishPosition  = cannonShot.targetSlot.transform.position;
 			fireFinishPosition.y 	= cannonHeight;
-			var fireAmmunitionTimer = 0f;
+			yield return StartCoroutine(MoveOrbPosition(attackOrbs, fireFinishPosition, fireAmmunitionTime));
 
-			while(Vector3.Distance(attackOrbs[0].transform.position, fireFinishPosition) > 0.1f) {
-				foreach (var attackOrb in attackOrbs)
-				{
-					attackOrb.transform.position  = Vector3.Lerp(attackOrb.transform.position, fireFinishPosition, fireAmmunitionTimer / fireAmmunitionTime);
-					fireAmmunitionTimer          += Time.deltaTime;
-					yield return null;
-				}
+			// TODO: Damage target
+
+			foreach (var attackOrb in attackOrbs)
+			{
+				Destroy(attackOrb.gameObject);
+			}
+		}
+
+		yield return new WaitForSeconds(0.5f);
+		References.gameController.SetCurrentState(new GameStatePickupCard());
+		Destroy(gameObject);
+	}
+
+	private IEnumerator RotateCannon(Vector3 targetPosition) {
+		var currentRotation  = transform.rotation;
+		var rotationToTarget = Quaternion.LookRotation((targetPosition - transform.position).normalized);
+		var rotationTimer    = 0f;
+
+		while(Quaternion.Angle(transform.rotation, rotationToTarget) > 1) {
+			transform.rotation  = Quaternion.Lerp(currentRotation, rotationToTarget, rotationTimer / rotationTime);
+			rotationTimer      += Time.deltaTime;
+
+			yield return null;
+		}
+	}
+
+	private IEnumerator RaiseUpCannonAndAmmunition(List<AttackOrb> attackOrbs) {
+		var timer     = 0f;
+		var newHeight = spawnHeight;
+		
+		while(newHeight < cannonHeight) {
+			// Cannon height
+			newHeight = Mathf.Lerp(spawnHeight, cannonHeight, timer / heightRaiseTime);
+
+			if (transform.position.y < cannonHeight) {
+				// Only raise cannon for first cannonShot
+				var newCannonPosition = transform.position;
+				newCannonPosition.y   = newHeight;
+				transform.position    = newCannonPosition;
+			}
+
+			// Attack orb height
+			foreach (var attackOrb in attackOrbs)
+			{
+				var newOrbPosition 			 = attackOrb.transform.position;
+				newOrbPosition.y   			 = newHeight;
+				attackOrb.transform.position = newOrbPosition;
+			}
+
+			timer += Time.deltaTime;
+			yield return null;
+		}
+	}
+
+	private IEnumerator MoveOrbPosition(List<AttackOrb> attackOrbs, Vector3 targetPosition, float timeToMove) {
+		var timer = 0f;
+		
+		while(Vector3.Distance(attackOrbs[0].transform.position, targetPosition) > 0.1f) {
+			foreach (var attackOrb in attackOrbs)
+			{
+				attackOrb.transform.position  = Vector3.Lerp(attackOrb.transform.position, targetPosition, timer / fireAmmunitionTime);
+				timer          += Time.deltaTime;
+				yield return null;
 			}
 		}
 	}
