@@ -143,3 +143,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6099d1fc59463914b82e5be5e29ee1c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cannonHeight: 1
+  timeToRotate: 0.5
+  timeToPosition: 1

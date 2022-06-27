@@ -13,13 +13,18 @@ public class GameStatePlaceNumberCard : GameStatePlaceCard
 
 	protected override void NextState()
 	{
-		if (cannonShots.Count == 0) base.NextState();
+		if (cannonShots.Count == 0) {
+			base.NextState();
+			return;
+		}
 
 		var cannonPrefab   = Resources.Load<GameObject>("Prefabs/Cannon/Cannon");
-		var cannonPosition = cannonShots[0].cannonSlot.transform.position + Vector3.down;
-		var cannon         = GameObject.Instantiate(cannonPrefab, cannonPosition, Quaternion.identity);
+		var cannonObject   = GameObject.Instantiate(cannonPrefab);
+		var cannon         = cannonObject.GetComponent<Cannon>();
+		var cannonPosition = cannonShots[0].cannonSlot.transform.position + cannon.GetSpawnHeightOffset();
 		
-		cannon.GetComponent<Cannon>().SetupShot(cannonShots);
+		cannonObject.transform.position = cannonPosition;
+		cannon.SetupShot(cannonShots);
 	}
 
 	protected override void EnableHighlight(GameObject target)

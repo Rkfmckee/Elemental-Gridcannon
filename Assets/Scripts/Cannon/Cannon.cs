@@ -15,6 +15,7 @@ public class Cannon : MonoBehaviour
 	[SerializeField]
 	private float timeToPosition;
 
+	private Vector3 spawnHeightOffset;
 	private List<CannonShot> cannonShots;
 
 	#endregion
@@ -23,12 +24,21 @@ public class Cannon : MonoBehaviour
 
 	private void Awake()
 	{
-		
+		spawnHeightOffset = Vector3.down;
 	}
 
 	#endregion
 
 	#region Methods
+
+		#region Get/Set
+
+		public Vector3 GetSpawnHeightOffset() {
+			return spawnHeightOffset;
+		}
+
+		#endregion
+
 	public void SetupShot(List<CannonShot> shots)
 	{
 		cannonShots = shots;
@@ -46,7 +56,8 @@ public class Cannon : MonoBehaviour
 		{
 			// Rotate cannon towards correct target
 			var currentRotation  = transform.rotation;
-			var rotationToTarget = Quaternion.LookRotation((cannonShot.targetSlot.transform.position - transform.position).normalized);
+			var targetPosition = cannonShot.targetSlot.transform.position + spawnHeightOffset;
+			var rotationToTarget = Quaternion.LookRotation((targetPosition - transform.position).normalized);
 			var rotationTimer    = 0f;
 
 			while(Quaternion.Angle(transform.rotation, rotationToTarget) > 1) {
@@ -62,12 +73,14 @@ public class Cannon : MonoBehaviour
 
 			foreach (var ammunitionSlot in cannonShot.ammunitionSlots)
 			{
-				var attackOrbPosition = ammunitionSlot.transform.position + (new Vector3(0, transform.position.y, 0));
+				var topCard = ammunitionSlot.GetTopCard();
+				if (topCard == null) continue;
+				
+				var attackOrbPosition = ammunitionSlot.transform.position + spawnHeightOffset;
 				var attackOrbRotation = Quaternion.identity;
 				var attackOrbObject   = Instantiate(attackOrbPrefab, attackOrbPosition, attackOrbRotation);
 				var attackOrb         = attackOrbObject.GetComponent<AttackOrb>();
 				
-				var topCard      = ammunitionSlot.GetTopCard();
 				var cardValue    = topCard.GetCardType().GetValue().GetDescription();
 				var cardSuit     = topCard.GetCardType().GetSuit().GetDescription();
 				var damageAmount = Int32.Parse(cardValue);
@@ -82,7 +95,22 @@ public class Cannon : MonoBehaviour
 			var positionTimer  = 0f;
 			
 			while(transform.position.y < cannonHeight) {
-				
+				// Cannon height
+				var newHeight         = Mathf.Lerp(startingHeight, cannonHeight, positionTimer / timeToPosition);
+				var newCannonPosition = transform.position;
+				newCannonPosition.y   = newHeight;
+				transform.position    = newCannonPosition;
+
+				// Attack orb height
+				foreach (var attackOrb in attackOrbs)
+				{
+					var newOrbPosition 			 = attackOrb.transform.position;
+					newOrbPosition.y   			 = newHeight;
+					attackOrb.transform.position = newOrbPosition;
+				}
+
+				positionTimer += Time.deltaTime;
+				yield return null;
 			}
 
 			// Bring ammunition back towards cannon
