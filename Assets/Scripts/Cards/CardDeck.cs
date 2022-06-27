@@ -66,9 +66,9 @@ public class CardDeck : MonoBehaviour {
 	}
 
 	private void FillDeckWithCards() {
-		    cardsInDeck = new List<(CardSuit, CardValue)>();
-		var allValues   = Enum.GetValues(typeof(CardValue));
-		var allSuits    = Enum.GetValues(typeof(CardSuit));
+		cardsInDeck   = new List<(CardSuit, CardValue)>();
+		var allValues = Enum.GetValues(typeof(CardValue));
+		var allSuits  = Enum.GetValues(typeof(CardSuit));
 
 		foreach(var suit in allSuits) {
 			var cardSuit = (CardSuit) suit;

@@ -144,5 +144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cannonHeight: 1
-  timeToRotate: 0.5
-  timeToPosition: 1
+  rotationTime: 0.5
+  heightRaiseTime: 1
+  loadAmmunitionTime: 1
+  fireAmmunitionTime: 0.2

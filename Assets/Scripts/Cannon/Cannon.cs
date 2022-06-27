@@ -11,11 +11,15 @@ public class Cannon : MonoBehaviour
 	[SerializeField]
 	private float cannonHeight;
 	[SerializeField]
-	private float timeToRotate;
+	private float rotationTime;
 	[SerializeField]
-	private float timeToPosition;
+	private float heightRaiseTime;
+	[SerializeField]
+	private float loadAmmunitionTime;
+	[SerializeField]
+	private float fireAmmunitionTime;
 
-	private Vector3 spawnHeightOffset;
+	private float spawnHeight;
 	private List<CannonShot> cannonShots;
 
 	#endregion
@@ -24,7 +28,7 @@ public class Cannon : MonoBehaviour
 
 	private void Awake()
 	{
-		spawnHeightOffset = Vector3.down;
+		spawnHeight = -1;
 	}
 
 	#endregion
@@ -34,7 +38,7 @@ public class Cannon : MonoBehaviour
 		#region Get/Set
 
 		public Vector3 GetSpawnHeightOffset() {
-			return spawnHeightOffset;
+			return Vector3.up * spawnHeight;
 		}
 
 		#endregion
@@ -56,12 +60,13 @@ public class Cannon : MonoBehaviour
 		{
 			// Rotate cannon towards correct target
 			var currentRotation  = transform.rotation;
-			var targetPosition = cannonShot.targetSlot.transform.position + spawnHeightOffset;
+			var targetPosition   = cannonShot.targetSlot.transform.position;
+			targetPosition.y 	 = transform.position.y;
 			var rotationToTarget = Quaternion.LookRotation((targetPosition - transform.position).normalized);
 			var rotationTimer    = 0f;
 
 			while(Quaternion.Angle(transform.rotation, rotationToTarget) > 1) {
-				transform.rotation  = Quaternion.Lerp(currentRotation, rotationToTarget, rotationTimer / timeToRotate);
+				transform.rotation  = Quaternion.Lerp(currentRotation, rotationToTarget, rotationTimer / rotationTime);
 				rotationTimer      += Time.deltaTime;
 
 				yield return null;
@@ -76,7 +81,7 @@ public class Cannon : MonoBehaviour
 				var topCard = ammunitionSlot.GetTopCard();
 				if (topCard == null) continue;
 				
-				var attackOrbPosition = ammunitionSlot.transform.position + spawnHeightOffset;
+				var attackOrbPosition = ammunitionSlot.transform.position + GetSpawnHeightOffset();
 				var attackOrbRotation = Quaternion.identity;
 				var attackOrbObject   = Instantiate(attackOrbPrefab, attackOrbPosition, attackOrbRotation);
 				var attackOrb         = attackOrbObject.GetComponent<AttackOrb>();
@@ -91,15 +96,19 @@ public class Cannon : MonoBehaviour
 			}
 
 			// Raise up cannon and ammunition if needed
-			var startingHeight = transform.position.y;
 			var positionTimer  = 0f;
+			var newHeight = spawnHeight;
 			
-			while(transform.position.y < cannonHeight) {
+			while(newHeight < cannonHeight) {
 				// Cannon height
-				var newHeight         = Mathf.Lerp(startingHeight, cannonHeight, positionTimer / timeToPosition);
-				var newCannonPosition = transform.position;
-				newCannonPosition.y   = newHeight;
-				transform.position    = newCannonPosition;
+				newHeight = Mathf.Lerp(spawnHeight, cannonHeight, positionTimer / heightRaiseTime);
+
+				if (transform.position.y < cannonHeight) {
+					// Only raise cannon for first cannonShot
+					var newCannonPosition = transform.position;
+					newCannonPosition.y   = newHeight;
+					transform.position    = newCannonPosition;
+				}
 
 				// Attack orb height
 				foreach (var attackOrb in attackOrbs)
@@ -114,8 +123,33 @@ public class Cannon : MonoBehaviour
 			}
 
 			// Bring ammunition back towards cannon
+			var loadFinishPosition  = transform.position;
+			var loadAmmunitionTimer = 0f;
+
+			while(Vector3.Distance(attackOrbs[0].transform.position, loadFinishPosition) > 0.1f) {
+				foreach (var attackOrb in attackOrbs)
+				{
+					attackOrb.transform.position  = Vector3.Lerp(attackOrb.transform.position, loadFinishPosition, loadAmmunitionTimer / loadAmmunitionTime);
+					loadAmmunitionTimer          += Time.deltaTime;
+					yield return null;
+				}
+			}
+
+			yield return new WaitForSeconds(0.5f);
 
 			// Fire at target
+			var fireFinishPosition  = cannonShot.targetSlot.transform.position;
+			fireFinishPosition.y 	= cannonHeight;
+			var fireAmmunitionTimer = 0f;
+
+			while(Vector3.Distance(attackOrbs[0].transform.position, fireFinishPosition) > 0.1f) {
+				foreach (var attackOrb in attackOrbs)
+				{
+					attackOrb.transform.position  = Vector3.Lerp(attackOrb.transform.position, fireFinishPosition, fireAmmunitionTimer / fireAmmunitionTime);
+					fireAmmunitionTimer          += Time.deltaTime;
+					yield return null;
+				}
+			}
 		}
 	}
 
