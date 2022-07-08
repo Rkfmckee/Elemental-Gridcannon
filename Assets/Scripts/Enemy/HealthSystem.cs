@@ -5,10 +5,9 @@ public class HealthSystem : MonoBehaviour
 {
 	#region Properties
 
+	public float currentHealth;
 	public float maxHealth;
 	public float healthBarHeightOffset;
-
-	private float currentHealth;
 
 	private new Camera camera;
 	private CanvasUI canvas;
@@ -35,11 +34,6 @@ public class HealthSystem : MonoBehaviour
 		healthBar = Instantiate(healthBarPrefab, healthBarParent);
 		healthBar.name = $"{name}HealthBar";
 		healthBarController = healthBar.GetComponent<HealthBar>();
-
-		if (gameObject.tag == "Trap" || gameObject.tag == "Trigger")
-		{
-			healthBar.SetActive(false);
-		}
 	}
 
 	private void LateUpdate()

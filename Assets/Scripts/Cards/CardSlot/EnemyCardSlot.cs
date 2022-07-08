@@ -4,6 +4,7 @@ public class EnemyCardSlot : CardSlot {
 	#region Properties
 
 	private NumberCardSlot adjacentNumberSlot;
+	private Enemy enemyForCard;
 	private Color targetColour;
 
 	#endregion
@@ -32,7 +33,25 @@ public class EnemyCardSlot : CardSlot {
 			adjacentNumberSlot = slot;
 		}
 
-		#endregion
+		public Enemy GetEnemyForCard()
+		{
+			return enemyForCard;
+		}
+
+	#endregion
+
+	public override void AddCard(Card card)
+	{
+		base.AddCard(card);
+
+		var enemyCard = card.GetComponent<EnemyCard>();
+		if (enemyCard == null) {
+			return;
+		}
+
+		var enemy = enemyCard.SpawnEnemy();
+		enemyForCard = enemy;
+	}
 
 	public void HighlightTarget() {
 		ShowCardSlot(true);

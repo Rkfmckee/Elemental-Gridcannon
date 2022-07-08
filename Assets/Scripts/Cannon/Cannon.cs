@@ -76,6 +76,20 @@ public class Cannon : MonoBehaviour
 		return attackOrbs;
 	}
 
+	private int GetAttackDamage(CannonShot cannonShot) {
+		var totalDamage = 0;
+
+		foreach (var ammunitionSlot in cannonShot.ammunitionSlots)
+		{
+			var topCard = ammunitionSlot.GetTopCard();
+			if (topCard == null) continue;
+
+			totalDamage += Int32.Parse(topCard.GetCardType().GetValue().GetDescription());
+		}
+
+		return totalDamage;
+	}
+
 	#endregion
 
 	#region Coroutines
@@ -84,13 +98,14 @@ public class Cannon : MonoBehaviour
 	{
 		foreach (var cannonShot in cannonShots)
 		{
+			// Rotate cannon towards target
 			var targetPosition   = cannonShot.targetSlot.transform.position;
 			targetPosition.y 	 = transform.position.y;
 			yield return StartCoroutine(RotateCannon(targetPosition));
 
+			// Raise cannon and/or ammunition
 			var ammunitionSlots = cannonShot.ammunitionSlots;
-			var attackOrbs = CreateAttackOrbs(ammunitionSlots);
-
+			var attackOrbs      = CreateAttackOrbs(ammunitionSlots);
 			yield return StartCoroutine(RaiseUpCannonAndAmmunition(attackOrbs));
 
 			// Load ammunition
@@ -99,12 +114,16 @@ public class Cannon : MonoBehaviour
 
 			yield return new WaitForSeconds(0.5f);
 
-			// Fire!
+			// Fire
 			var fireFinishPosition  = cannonShot.targetSlot.transform.position;
 			fireFinishPosition.y 	= cannonHeight;
 			yield return StartCoroutine(MoveOrbPosition(attackOrbs, fireFinishPosition, fireAmmunitionTime));
 
-			// TODO: Damage target
+			// Damage target and destroy
+			var enemy             = cannonShot.targetSlot.GetEnemyForCard();
+			var enemyHealthSystem = enemy.GetComponent<HealthSystem>();
+			var damageAmount      = GetAttackDamage(cannonShot);
+			enemyHealthSystem.TakeDamageOverTime(damageAmount, 1);
 
 			foreach (var attackOrb in attackOrbs)
 			{

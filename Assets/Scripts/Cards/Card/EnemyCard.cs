@@ -3,29 +3,53 @@ using System.Collections.Generic;
 using UnityEngine;
 using static CardType;
 
-public class EnemyCard : Card {
+public class EnemyCard : Card
+{
 	#region Properties
 
 	private bool startGamePlacement;
+	private GameObject enemyPrefab;
+	private float shrinkTarget;
+	private float shrinkRate;
+	private float growTarget;
 
 	#endregion
-	
+
+	#region Events
+
+	protected override void Awake()
+	{
+		base.Awake();
+
+		shrinkTarget = 0.2f;
+		shrinkRate   = 1;
+	}
+
+	private void Start() {
+		enemyPrefab = Resources.Load<GameObject>($"Prefabs/Enemy/{cardType.GetSuit()}Golem");
+		growTarget  = enemyPrefab.transform.localScale.magnitude;
+	}
+
+	#endregion
+
 	#region Methods
 
 		#region Get/Set
 
-		public void SetStartGamePlacement(bool startGame) {
+		public void SetStartGamePlacement(bool startGame)
+		{
 			startGamePlacement = startGame;
 		}
 
 		#endregion
 
-	public override void ActivateCard() {
+	public override void ActivateCard()
+	{
 		var oppositeSuits         = cardType.GetOppositeSuits();
 		var primaryOppositeSuit   = oppositeSuits.Value.Item1;
 		var secondaryOppositeSuit = oppositeSuits.Value.Item2;
 
-		var numberSlots  = References.Cards.Slots.number;
+		var numberSlots = References.Cards.Slots.number;
 		var slotsForType = new Dictionary<CardSuit, List<NumberCardSlot>> {
 			{ CardSuit.Air, new List<NumberCardSlot>() },
 			{ CardSuit.Earth, new List<NumberCardSlot>() },
@@ -34,8 +58,10 @@ public class EnemyCard : Card {
 		};
 		var validEnemySlots = new List<EnemyCardSlot>();
 
-		foreach(var slot in numberSlots) {
-			if (slot.GetCards().Count == 0) {
+		foreach (var slot in numberSlots)
+		{
+			if (slot.GetCards().Count == 0)
+			{
 				continue;
 			}
 
@@ -45,22 +71,27 @@ public class EnemyCard : Card {
 
 		validEnemySlots = GetHighestValue(slotsForType[primaryOppositeSuit]);
 
-		if (validEnemySlots.Count == 0) {
+		if (validEnemySlots.Count == 0)
+		{
 			validEnemySlots = GetHighestValue(slotsForType[secondaryOppositeSuit]);
 		}
 
-		if (validEnemySlots.Count == 0) {
+		if (validEnemySlots.Count == 0)
+		{
 			validEnemySlots = GetHighestValue(numberSlots);
 		}
 
-		if (validEnemySlots.Count == 0) {
+		if (validEnemySlots.Count == 0)
+		{
 			validEnemySlots = References.Cards.Slots.enemy;
 		}
 
-		if (validEnemySlots.Count == 1) {
+		if (validEnemySlots.Count == 1)
+		{
 			var validSlot = validEnemySlots[0];
 
-			if (validSlot.GetCards().Count == 0) {
+			if (validSlot.GetCards().Count == 0)
+			{
 				validSlot.AddCard(this);
 				if (!startGamePlacement) References.gameController.SetCurrentState(new GameStatePickupCard());
 				return;
@@ -70,54 +101,76 @@ public class EnemyCard : Card {
 		ActivateValidSlots(validEnemySlots);
 	}
 
-	public void SpawnEnemy() {
-		StartCoroutine(ShrinkCardAndSpawnEnemy());
+	public Enemy SpawnEnemy()
+	{
+		var enemyCardSlot          = currentSlot.GetComponent<EnemyCardSlot>();
+		var enemyFacing            = (currentSlot.transform.position - enemyCardSlot.GetAdjacentNumberSlot().transform.position).normalized;
+		var enemy                  = Instantiate(enemyPrefab);
+		enemy.transform.localScale = Vector3.one * shrinkTarget;
+		enemy.transform.rotation   = Quaternion.LookRotation(enemyFacing);
+		enemy.SetActive(false);
+
+		StartCoroutine(ShrinkCardAndSpawnEnemy(enemy));
+
+		return enemy.GetComponent<Enemy>();
 	}
 
-	private List<EnemyCardSlot> GetHighestValue(List<NumberCardSlot> slots) {
+	private List<EnemyCardSlot> GetHighestValue(List<NumberCardSlot> slots)
+	{
 		var validEnemySlots = new List<EnemyCardSlot>();
-		
-		if (slots.Count == 0) {
+
+		if (slots.Count == 0)
+		{
 			return validEnemySlots;
 		}
-		
+
 		CardValue? highestSlotValue = null;
 
 		// First make sure at least one of the slots has a card
-		foreach(var slot in slots) {
-			if (ShouldIgnoreSlot(slot)) {
+		foreach (var slot in slots)
+		{
+			if (ShouldIgnoreSlot(slot))
+			{
 				continue;
 			}
 
-			if (slot.GetCards().Count > 0) {
-				highestSlotValue = (CardValue?) slot.GetTopCard().GetCardType().GetValue();
+			if (slot.GetCards().Count > 0)
+			{
+				highestSlotValue = (CardValue?)slot.GetTopCard().GetCardType().GetValue();
 				break;
 			}
 		}
 
 		// If all the slots are empty
-		if (!highestSlotValue.HasValue) {
+		if (!highestSlotValue.HasValue)
+		{
 			return validEnemySlots;
 		}
 
 		// Otherwise, at least one slot has a card
-		foreach(var slot in slots) {
-			if (ShouldIgnoreSlot(slot)) {
+		foreach (var slot in slots)
+		{
+			if (ShouldIgnoreSlot(slot))
+			{
 				continue;
 			}
 
-			if (slot.GetCards().Count == 0) {
+			if (slot.GetCards().Count == 0)
+			{
 				continue;
 			}
 
-			var cardValue  = slot.GetTopCard().GetCardType().GetValue();
+			var cardValue = slot.GetTopCard().GetCardType().GetValue();
 			var validSlots = GetEmptyEnemySlots(slot);
-			
-			if (cardValue > highestSlotValue) {
+
+			if (cardValue > highestSlotValue)
+			{
 				highestSlotValue = cardValue;
 				validEnemySlots.Clear();
 				validEnemySlots.AddRange(validSlots);
-			} else if (cardValue == highestSlotValue) {
+			}
+			else if (cardValue == highestSlotValue)
+			{
 				validEnemySlots.AddRange(validSlots);
 			}
 		}
@@ -125,27 +178,32 @@ public class EnemyCard : Card {
 		return validEnemySlots;
 	}
 
-	private bool ShouldIgnoreSlot(NumberCardSlot slot) {
+	private bool ShouldIgnoreSlot(NumberCardSlot slot)
+	{
 		var enemySlots = slot.GetAdjacentEnemySlots();
-		
+
 		// Ignore slots an enemy can't be placed beside, like the middle one
-		if (enemySlots.Count == 0) {
+		if (enemySlots.Count == 0)
+		{
 			return true;
 		}
 
-
-		if (GetEmptyEnemySlots(slot).Count == 0) {
+		if (GetEmptyEnemySlots(slot).Count == 0)
+		{
 			return true;
 		}
 
 		return false;
 	}
 
-	private List<EnemyCardSlot> GetEmptyEnemySlots(NumberCardSlot slot) {
+	private List<EnemyCardSlot> GetEmptyEnemySlots(NumberCardSlot slot)
+	{
 		var emptySlots = new List<EnemyCardSlot>();
 
-		foreach(var enemySlot in slot.GetAdjacentEnemySlots()) {
-			if (enemySlot.GetCards().Count == 0) {
+		foreach (var enemySlot in slot.GetAdjacentEnemySlots())
+		{
+			if (enemySlot.GetCards().Count == 0)
+			{
 				emptySlots.Add(enemySlot);
 			}
 		}
@@ -153,9 +211,12 @@ public class EnemyCard : Card {
 		return emptySlots;
 	}
 
-	private void ActivateValidSlots(List<EnemyCardSlot> validSlots) {
-		foreach(var slot in validSlots) {
-			if (slot.GetCards().Count == 0) {
+	private void ActivateValidSlots(List<EnemyCardSlot> validSlots)
+	{
+		foreach (var slot in validSlots)
+		{
+			if (slot.GetCards().Count == 0)
+			{
 				slot.SetCanPlaceCard(true);
 			}
 		}
@@ -167,35 +228,31 @@ public class EnemyCard : Card {
 
 	#region Coroutines
 
-	private IEnumerator ShrinkCardAndSpawnEnemy() {
-		var enemyPrefab   = Resources.Load<GameObject>($"Prefabs/Enemy/{cardType.GetSuit()}Golem");
-		var enemyCardSlot = currentSlot.GetComponent<EnemyCardSlot>();
-		var enemyFacing   = (currentSlot.transform.position - enemyCardSlot.GetAdjacentNumberSlot().transform.position).normalized;
-		var shrinkRate    = 1;
-		var shrinkTarget  = 0.2f;
-		var growTarget    = enemyPrefab.transform.localScale.magnitude;
-		
-		while (GetCurrentState() == CardState.Moving) {
+	private IEnumerator ShrinkCardAndSpawnEnemy(GameObject enemy)
+	{
+		while (GetCurrentState() == CardState.Moving)
+		{
 			yield return null;
 		}
 
-		while (transform.localScale.magnitude > shrinkTarget) {
+		while (transform.localScale.magnitude > shrinkTarget)
+		{
 			transform.localScale -= Vector3.one * shrinkRate * Time.deltaTime;
 			yield return null;
 		}
 
-		var enemy                  = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
-		enemy.transform.localScale = Vector3.one * shrinkTarget;
-		enemy.transform.rotation   = Quaternion.LookRotation(enemyFacing);
+		enemy.transform.position = transform.position;
+		enemy.SetActive(true);
 
-		while(enemy.transform.localScale.magnitude < growTarget ) {
+		while (enemy.transform.localScale.magnitude < growTarget)
+		{
 			enemy.transform.localScale += Vector3.one * shrinkRate * Time.deltaTime;
 			yield return null;
 		}
 
 		HideCard(true);
 		enemy.transform.localScale = Vector3.one;
-		transform.localScale       = Vector3.one;
+		transform.localScale = Vector3.one;
 	}
 
 	#endregion

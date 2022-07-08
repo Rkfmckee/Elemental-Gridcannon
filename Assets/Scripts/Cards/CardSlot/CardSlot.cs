@@ -63,7 +63,7 @@ public abstract class CardSlot : MonoBehaviour {
 
 		#endregion
 
-	public void AddCard(Card card) {
+	public virtual void AddCard(Card card) {
 		card.MoveCard(nextCardPosition, cardRotation, 1, CardState.Placed);
 		card.transform.parent = transform;
 		card.currentSlot      = this;
@@ -71,11 +71,6 @@ public abstract class CardSlot : MonoBehaviour {
 		topCard = card;
 		cards.Push(card);
 		nextCardPosition.y += 0.01f;
-
-		var enemyCard = card.GetComponent<EnemyCard>();
-		if (enemyCard != null && this is EnemyCardSlot) {
-			enemyCard.SpawnEnemy();
-		}
 	}
 
 	public Card RemoveCard() {
