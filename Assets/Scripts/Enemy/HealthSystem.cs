@@ -90,6 +90,10 @@ public class HealthSystem : MonoBehaviour
 	{
 		if (currentHealth <= 0)
 		{
+			var cardSlot = GetComponent<Enemy>().GetCardSlot();
+			var card     = cardSlot.RemoveCard();
+
+			Destroy(card);
 			Destroy(gameObject);
 		}
 	}

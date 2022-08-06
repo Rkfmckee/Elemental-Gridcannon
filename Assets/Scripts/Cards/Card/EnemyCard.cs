@@ -103,16 +103,19 @@ public class EnemyCard : Card
 
 	public Enemy SpawnEnemy()
 	{
-		var enemyCardSlot          = currentSlot.GetComponent<EnemyCardSlot>();
-		var enemyFacing            = (enemyCardSlot.GetAdjacentNumberSlot().transform.position - currentSlot.transform.position).normalized;
-		var enemy                  = Instantiate(enemyPrefab);
-		enemy.transform.localScale = Vector3.one * shrinkTarget;
-		enemy.transform.rotation   = Quaternion.LookRotation(enemyFacing);
-		enemy.SetActive(false);
+		var enemyCardSlot = currentSlot.GetComponent<EnemyCardSlot>();
+		var enemyFacing   = (enemyCardSlot.GetAdjacentNumberSlot().transform.position - currentSlot.transform.position).normalized;
+		var enemyObject   = Instantiate(enemyPrefab);
+		var enemy         = enemyObject.GetComponent<Enemy>();
 
-		StartCoroutine(ShrinkCardAndSpawnEnemy(enemy));
+		enemyObject.transform.localScale = Vector3.one * shrinkTarget;
+		enemyObject.transform.rotation   = Quaternion.LookRotation(enemyFacing);
+		enemyObject.SetActive(false);
+		enemy.SetCardSlot(enemyCardSlot);
 
-		return enemy.GetComponent<Enemy>();
+		StartCoroutine(ShrinkCardAndSpawnEnemy(enemyObject));
+
+		return enemy;
 	}
 
 	private List<EnemyCardSlot> GetHighestValue(List<NumberCardSlot> slots)

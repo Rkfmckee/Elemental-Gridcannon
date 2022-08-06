@@ -24,7 +24,7 @@ public class CardDeck : MonoBehaviour {
 		References.Cards.cardDeck = this;
 
 		spawnPosition    = new Vector3(0, 0.1f, 0);
-		outOfBoxPosition = new Vector3(5, 0, 0);
+		outOfBoxPosition = new Vector3(6, 0, 1);
 		pickupPosition   = new Vector3(2, 2, -2.9f);
 		pickupRotation   = new Vector3(-30, 0, 10);
 		spawnRotation    = new Vector3(0, 0, -180);
@@ -89,8 +89,8 @@ public class CardDeck : MonoBehaviour {
 		var cardValue  = cardToPick.Item2;
 		cardsInDeck.RemoveAt(0);
 		
-		var cardPrefab                 = Resources.Load<GameObject>($"Prefabs/Cards/{cardSuit}/{cardValue.GetDescription()}{cardSuit}");
-		var card                       = Instantiate(cardPrefab);
+		var cardPrefab = Resources.Load<GameObject>($"Prefabs/Cards/{cardSuit}/{cardValue.GetDescription()}{cardSuit}");
+		var card       = Instantiate(cardPrefab);
 
 		card.transform.position    = transform.position + spawnPosition;
 		card.transform.eulerAngles = spawnRotation;
