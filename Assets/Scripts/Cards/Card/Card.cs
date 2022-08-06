@@ -11,11 +11,17 @@ public abstract class Card : MonoBehaviour {
 	private CardState currentState;
 	private float movementTimer;
 
+	private Renderer[] renderers;
+	private Collider[] colliders;
+
 	#endregion
 
 	#region Events
 
 	protected virtual void Awake() {
+		renderers = GetComponentsInChildren<MeshRenderer>();
+		colliders = GetComponentsInChildren<BoxCollider>();
+		
 		cardType = new CardType();
 	}
 
@@ -49,8 +55,26 @@ public abstract class Card : MonoBehaviour {
 		StartCoroutine(MovePositionAndRotation(transform.position, position, Quaternion.Euler(rotation), timeToMove, finishState));
 	}
 
+	public void HideCard(bool hide) {
+		if (renderers != null)
+		{
+			foreach (var renderer in renderers)
+			{
+				renderer.enabled = !hide;
+			}
+		}
+
+		if (colliders != null) 
+		{
+			foreach (var collider in colliders)
+			{
+				collider.enabled = !hide;
+			}
+		}
+	}
+
 	private IEnumerator MovePositionAndRotation(Vector3 startPosition, Vector3 finishPosition, Quaternion finishRotation, float timeToMove, CardState finishState) {
-		currentState = CardState.Moving;
+		currentState  	  = CardState.Moving;
 		var startRotation = transform.rotation;
 		
 		while (movementTimer < timeToMove) {
@@ -64,7 +88,7 @@ public abstract class Card : MonoBehaviour {
 		transform.position = finishPosition;
 		transform.rotation = finishRotation;
 	
-		currentState = finishState;
+		currentState  = finishState;
 		movementTimer = 0;
 	}
 

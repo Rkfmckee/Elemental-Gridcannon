@@ -10,25 +10,25 @@ public abstract class CardSlot : MonoBehaviour {
 	private Stack<Card> cards;
 	private Vector3 nextCardPosition;
 	private Vector3 cardRotation;
-	private Color defaultParticleMaterialColour;
-	private Color translucentParticleMaterialColour;
+	private Color defaultParticleColour;
+	private Color translucentParticleColour;
 
+	protected ParticleSystemRenderer[] particleSystems;
 	private GameObject slotGlow;
-	private ParticleSystemRenderer[] particleSystems;
 
 	#endregion
 
 	protected virtual void Awake() {
-		slotGlow = transform.Find("CardSlotGlow").gameObject;
+		slotGlow        = transform.Find("CardSlotGlow").gameObject;
 		particleSystems = slotGlow.GetComponentsInChildren<ParticleSystemRenderer>();
 
-		cards = new Stack<Card>();
+		cards            = new Stack<Card>();
 		nextCardPosition = transform.position;
-		cardRotation = new Vector3(0, -90, 0);
+		cardRotation     = new Vector3(0, -90, 0);
 
-		defaultParticleMaterialColour = particleSystems[0].material.GetColor("_TintColor");
-		translucentParticleMaterialColour = defaultParticleMaterialColour;
-		translucentParticleMaterialColour.a = 0.1f;
+		defaultParticleColour       = particleSystems[0].material.GetColor("_TintColor");
+		translucentParticleColour   = defaultParticleColour;
+		translucentParticleColour.a = 0.1f;
 
 		SetCanPlaceCard(false);
 		HighlightTranslucent();
@@ -44,13 +44,9 @@ public abstract class CardSlot : MonoBehaviour {
 
 		public void SetCanPlaceCard(bool canPlace) {
 			canPlaceCard = canPlace;
+			ShowCardSlot(canPlace);
 
-			if (canPlace) {
-				slotGlow.transform.localPosition = Vector3.zero;
-				References.Cards.Slots.active.Add(this);
-			} else {
-				slotGlow.transform.localPosition = Vector3.down;
-			}
+			if (canPlace) References.Cards.Slots.active.Add(this);
 		}
 
 		public Card GetTopCard() {
@@ -67,39 +63,50 @@ public abstract class CardSlot : MonoBehaviour {
 
 		#endregion
 
-	public void AddCard(Card card) {
+	public virtual void AddCard(Card card) {
 		card.MoveCard(nextCardPosition, cardRotation, 1, CardState.Placed);
 		card.transform.parent = transform;
-		card.currentSlot = this;
+		card.currentSlot      = this;
 
 		topCard = card;
 		cards.Push(card);
 		nextCardPosition.y += 0.01f;
-
-		var enemyCard = card.GetComponent<EnemyCard>();
-		if (enemyCard != null) {
-			enemyCard.SpawnEnemy();
-		}
 	}
 
-	public void RemoveCard() {
-		var removedCard = cards.Pop();
-		removedCard.transform.parent = null;
-		removedCard.currentSlot = null;
+	public Card RemoveCard() {
+		var removedCard                  = cards.Pop();
+		    removedCard.transform.parent = null;
+		    removedCard.currentSlot      = null;
 		
-		topCard = cards.Peek();
+		if (cards.Count > 0) {
+			topCard = cards.Peek();
+		} else {
+			topCard = null;
+		}
+
 		nextCardPosition.y -= 0.01f;
+		return removedCard;
 	}
 
 	public void HighlightDefault() {
 		foreach(var particleSystem in particleSystems) {
-			particleSystem.material.SetColor("_TintColor", defaultParticleMaterialColour);
+			particleSystem.material.SetColor("_TintColor", defaultParticleColour);
 		}
 	}
 
 	public void HighlightTranslucent() {
 		foreach(var particleSystem in particleSystems) {
-			particleSystem.material.SetColor("_TintColor", translucentParticleMaterialColour);
+			particleSystem.material.SetColor("_TintColor", translucentParticleColour);
+		}
+	}
+
+	protected void ShowCardSlot(bool show) {
+		if (show) {
+			slotGlow.transform.localPosition = Vector3.zero;
+		}
+		else
+		{
+			slotGlow.transform.localPosition = Vector3.down;
 		}
 	}
 

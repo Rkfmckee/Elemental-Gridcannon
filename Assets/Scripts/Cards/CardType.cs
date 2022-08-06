@@ -26,8 +26,8 @@ public class CardType {
 
 	public void SetType(CardValue value, CardSuit suit) {
 		this.value = value;
-		this.suit = suit;
-		type = $"{value.GetDescription()}{suit.GetDescription()}";
+		this.suit  = suit;
+		type       = $"{value.GetDescription()}{suit.GetDescription()}";
 	}
 
 	public (CardSuit, CardSuit)? GetOppositeSuits() {

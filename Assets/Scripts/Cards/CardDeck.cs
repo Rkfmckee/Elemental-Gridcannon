@@ -21,11 +21,13 @@ public class CardDeck : MonoBehaviour {
 	#region Events
 
 	private void Awake() {
-		spawnPosition = new Vector3(0, 0.1f, 0);
-		outOfBoxPosition = new Vector3(5, 0, 0);
-		pickupPosition = new Vector3(2, 2, -2.9f);
-		pickupRotation = new Vector3(-30, 0, 10);
-		spawnRotation = new Vector3(0, 0, -180);
+		References.Cards.cardDeck = this;
+
+		spawnPosition    = new Vector3(0, 0.1f, 0);
+		outOfBoxPosition = new Vector3(6, 0, 1);
+		pickupPosition   = new Vector3(2, 2, -2.9f);
+		pickupRotation   = new Vector3(-30, 0, 10);
+		spawnRotation    = new Vector3(0, 0, -180);
 
 		FillDeckWithCards();
 	}
@@ -33,29 +35,110 @@ public class CardDeck : MonoBehaviour {
 	#endregion
 	
 	#region Methods
+
+		#region Get/Set
+
+		public Vector3 GetPickupPosition() {
+			return pickupPosition;
+		}
+
+		public Vector3 GetPickupRotation() {
+			return pickupRotation;
+		}
+
+		#endregion
+
+	public void LayoutInitialCards() {
+		StartCoroutine(LayoutCards());
+	}
+
 	public bool PickupCard() {
 		if (cardsInDeck.Count == 0) {
 			print("No cards remaining in deck");
 			return false;
 		}
 
+		var card = SpawnNextCard();
+		StartCoroutine(PickupCard(card));
+		References.Cards.currentCard = card;
+
+		return true;
+	}
+
+	private void FillDeckWithCards() {
+		cardsInDeck   = new List<(CardSuit, CardValue)>();
+		var allValues = Enum.GetValues(typeof(CardValue));
+		var allSuits  = Enum.GetValues(typeof(CardSuit));
+
+		foreach(var suit in allSuits) {
+			var cardSuit = (CardSuit) suit;
+			foreach(var value in allValues) {
+				var cardValue = (CardValue) value;
+				cardsInDeck.Add((cardSuit, cardValue));
+			}
+		}
+
+		var random      = new System.Random();
+		var randomized  = cardsInDeck.OrderBy(item => random.Next());
+		    cardsInDeck = randomized.ToList();
+	}
+
+	private Card SpawnNextCard() {
 		var cardToPick = cardsInDeck[0];
+		var cardSuit   = cardToPick.Item1;
+		var cardValue  = cardToPick.Item2;
 		cardsInDeck.RemoveAt(0);
-		var cardSuit = cardToPick.Item1;
-		var cardValue = cardToPick.Item2;
 		
 		var cardPrefab = Resources.Load<GameObject>($"Prefabs/Cards/{cardSuit}/{cardValue.GetDescription()}{cardSuit}");
-		var card = Instantiate(cardPrefab);
-		card.transform.position = transform.position + spawnPosition;
+		var card       = Instantiate(cardPrefab);
+
+		card.transform.position    = transform.position + spawnPosition;
 		card.transform.eulerAngles = spawnRotation;
 
 		var cardController = card.GetComponent<Card>();
 		cardController.SetCardType(cardValue, cardSuit);
 
-		StartCoroutine(PickupCard(cardController));
+		return cardController;
+	}
 
-		References.Cards.currentCard = cardController;
-		return true;
+	#endregion
+
+	#region Coroutines
+
+	private IEnumerator LayoutCards() {
+		var numberCardSlots   = References.Cards.Slots.number;
+		var specialCardSlot   = References.Cards.Slots.special;
+		var tempEnemyCardSlot = References.Cards.Slots.tempEnemy;
+
+		int i = 0;
+		while(i < numberCardSlots.Count) {
+			var slot = numberCardSlots[i];
+
+			if (slot.GetAdjacentEnemySlots().Count == 0) {
+				i++;
+				continue;
+			}
+
+			var card = SpawnNextCard();
+			if (card is EnemyCard) {
+				tempEnemyCardSlot.AddCard(card);
+			} else if (card is SpecialCard) {
+				specialCardSlot.AddCard(card);
+			} else {
+				slot.AddCard(card);
+				i++;
+			}
+
+			yield return new WaitForSeconds(0.2f);
+		}
+
+		yield return new WaitForSeconds(1);
+
+		if (tempEnemyCardSlot.GetCards().Count > 0) {
+			References.gameController.SetCurrentState(new GameStatePlaceStartingEnemies());
+		} else {
+			References.gameController.SetCurrentState(new GameStatePickupCard());
+		}
 	}
 
 	private IEnumerator PickupCard(Card card) {
@@ -74,24 +157,6 @@ public class CardDeck : MonoBehaviour {
 		}
 
 		card.ActivateCard();
-	}
-
-	private void FillDeckWithCards() {
-		cardsInDeck = new List<(CardSuit, CardValue)>();
-		var allValues = Enum.GetValues(typeof(CardValue));
-		var allSuits = Enum.GetValues(typeof(CardSuit));
-
-		foreach(var suit in allSuits) {
-			var cardSuit = (CardSuit) suit;
-			foreach(var value in allValues) {
-				var cardValue = (CardValue) value;
-				cardsInDeck.Add((cardSuit, cardValue));
-			}
-		}
-
-		var random = new System.Random();
-        var randomized = cardsInDeck.OrderBy(item => random.Next());
-		cardsInDeck = randomized.ToList();
 	}
 
 	#endregion
