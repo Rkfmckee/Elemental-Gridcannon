@@ -112,6 +112,7 @@ public class EnemyCard : Card
 		enemyObject.transform.rotation   = Quaternion.LookRotation(enemyFacing);
 		enemyObject.SetActive(false);
 		enemy.SetCardSlot(enemyCardSlot);
+		enemy.SetCurrentState(new EnemyStateSpawn(enemyObject));
 
 		StartCoroutine(ShrinkCardAndSpawnEnemy(enemyObject));
 
@@ -253,9 +254,11 @@ public class EnemyCard : Card
 			yield return null;
 		}
 
-		HideCard(true);
 		enemy.transform.localScale = Vector3.one;
 		transform.localScale = Vector3.one;
+
+		HideCard(true);
+		enemy.GetComponent<Enemy>().SetCurrentState(new EnemyStateIdle(enemy));
 	}
 
 	#endregion
