@@ -26,7 +26,7 @@ public class EnemyCard : Card
 	}
 
 	private void Start() {
-		enemyPrefab = Resources.Load<GameObject>($"Prefabs/Enemy/{cardType.GetSuit()}Golem");
+		enemyPrefab = Resources.Load<GameObject>($"Prefabs/Elementals/{cardType.GetSuit()}Elemental");
 		growTarget  = enemyPrefab.transform.localScale.magnitude;
 	}
 
@@ -104,7 +104,7 @@ public class EnemyCard : Card
 	public Enemy SpawnEnemy()
 	{
 		var enemyCardSlot          = currentSlot.GetComponent<EnemyCardSlot>();
-		var enemyFacing            = (currentSlot.transform.position - enemyCardSlot.GetAdjacentNumberSlot().transform.position).normalized;
+		var enemyFacing            = (enemyCardSlot.GetAdjacentNumberSlot().transform.position - currentSlot.transform.position).normalized;
 		var enemy                  = Instantiate(enemyPrefab);
 		enemy.transform.localScale = Vector3.one * shrinkTarget;
 		enemy.transform.rotation   = Quaternion.LookRotation(enemyFacing);
