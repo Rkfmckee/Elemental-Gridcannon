@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static AttackOrb;
 
 public class Cannon : MonoBehaviour
 {
@@ -53,7 +52,7 @@ public class Cannon : MonoBehaviour
 	private List<AttackOrb> CreateAttackOrbs(NumberCardSlot[] ammunitionSlots)
 	{
 		var attackOrbPrefab = Resources.Load<GameObject>("Prefabs/Cannon/AttackOrb");
-		var attackOrbs = new List<AttackOrb>();
+		var attackOrbs      = new List<AttackOrb>();
 
 		foreach (var ammunitionSlot in ammunitionSlots)
 		{
@@ -62,15 +61,14 @@ public class Cannon : MonoBehaviour
 
 			var attackOrbPosition = ammunitionSlot.transform.position + GetSpawnHeightOffset();
 			var attackOrbRotation = Quaternion.identity;
-			var attackOrbObject = Instantiate(attackOrbPrefab, attackOrbPosition, attackOrbRotation);
-			var attackOrb = attackOrbObject.GetComponent<AttackOrb>();
+			var attackOrbObject   = Instantiate(attackOrbPrefab, attackOrbPosition, attackOrbRotation);
+			var attackOrb         = attackOrbObject.GetComponent<AttackOrb>();
 
-			var cardValue = topCard.GetCardType().GetValue().GetDescription();
-			var cardSuit = topCard.GetCardType().GetSuit().GetDescription();
+			var cardValue    = topCard.GetCardType().GetValue().GetDescription();
+			var cardSuit     = topCard.GetCardType().GetSuit();
 			var damageAmount = Int32.Parse(cardValue);
-			var damageType = (DamageType)Enum.Parse(typeof(DamageType), cardSuit);
 
-			attackOrb.SetDamage(damageAmount, damageType);
+			attackOrb.SetDamage(damageAmount, cardSuit);
 			attackOrbs.Add(attackOrb);
 		}
 
@@ -102,12 +100,12 @@ public class Cannon : MonoBehaviour
 		{
 			// Rotate cannon towards target
 			var targetPosition = cannonShot.targetSlot.transform.position;
-			targetPosition.y = transform.position.y;
+			targetPosition.y   = transform.position.y;
 			yield return StartCoroutine(RotateCannon(targetPosition));
 
 			// Raise cannon and/or ammunition
 			var ammunitionSlots = cannonShot.ammunitionSlots;
-			var attackOrbs = CreateAttackOrbs(ammunitionSlots);
+			var attackOrbs      = CreateAttackOrbs(ammunitionSlots);
 			yield return StartCoroutine(RaiseUpCannonAndAmmunition(attackOrbs));
 
 			// Load ammunition
@@ -118,14 +116,14 @@ public class Cannon : MonoBehaviour
 
 			// Fire
 			var fireFinishPosition = cannonShot.targetSlot.transform.position;
-			fireFinishPosition.y = cannonHeight;
+			fireFinishPosition.y   = cannonHeight;
 			yield return StartCoroutine(MoveOrbPosition(attackOrbs, fireFinishPosition, fireAmmunitionTime));
 
 			// Damage target and destroy
-			var enemy = cannonShot.targetSlot.GetEnemyForCard();
-			var enemyHealthSystem = enemy.GetComponent<HealthSystem>();
+			var enemy        = cannonShot.targetSlot.GetEnemyForCard();
+			var enemyHealth  = enemy.GetComponent<HealthSystem>();
 			var damageAmount = GetAttackDamage(cannonShot);
-			enemyHealthSystem.TakeDamageOverTime(damageAmount, 1);
+			enemyHealth.TakeDamageOverTime(damageAmount, 1);
 
 			foreach (var attackOrb in attackOrbs)
 			{
@@ -140,14 +138,14 @@ public class Cannon : MonoBehaviour
 
 	private IEnumerator RotateCannon(Vector3 targetPosition)
 	{
-		var currentRotation = transform.rotation;
+		var currentRotation  = transform.rotation;
 		var rotationToTarget = Quaternion.LookRotation((targetPosition - transform.position).normalized);
-		var rotationTimer = 0f;
+		var rotationTimer    = 0f;
 
 		while (Quaternion.Angle(transform.rotation, rotationToTarget) > 1)
 		{
-			transform.rotation = Quaternion.Lerp(currentRotation, rotationToTarget, rotationTimer / rotationTime);
-			rotationTimer += Time.deltaTime;
+			transform.rotation  = Quaternion.Lerp(currentRotation, rotationToTarget, rotationTimer / rotationTime);
+			rotationTimer      += Time.deltaTime;
 
 			yield return null;
 		}
@@ -155,7 +153,7 @@ public class Cannon : MonoBehaviour
 
 	private IEnumerator RaiseUpCannonAndAmmunition(List<AttackOrb> attackOrbs)
 	{
-		var timer = 0f;
+		var timer     = 0f;
 		var newHeight = spawnHeight;
 
 		while (newHeight < cannonHeight)
@@ -167,15 +165,15 @@ public class Cannon : MonoBehaviour
 			{
 				// Only raise cannon for first cannonShot
 				var newCannonPosition = transform.position;
-				newCannonPosition.y = newHeight;
-				transform.position = newCannonPosition;
+				newCannonPosition.y   = newHeight;
+				transform.position    = newCannonPosition;
 			}
 
 			// Attack orb height
 			foreach (var attackOrb in attackOrbs)
 			{
-				var newOrbPosition = attackOrb.transform.position;
-				newOrbPosition.y = newHeight;
+				var newOrbPosition           = attackOrb.transform.position;
+				newOrbPosition.y             = newHeight;
 				attackOrb.transform.position = newOrbPosition;
 			}
 
@@ -192,8 +190,8 @@ public class Cannon : MonoBehaviour
 		{
 			foreach (var attackOrb in attackOrbs)
 			{
-				attackOrb.transform.position = Vector3.Lerp(attackOrb.transform.position, targetPosition, timer / fireAmmunitionTime);
-				timer += Time.deltaTime;
+				attackOrb.transform.position  = Vector3.Lerp(attackOrb.transform.position, targetPosition, timer / fireAmmunitionTime);
+				timer                        += Time.deltaTime;
 				yield return null;
 			}
 		}

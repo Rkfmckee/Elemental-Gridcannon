@@ -9,7 +9,7 @@ using static CardType;
 public class CardDeck : MonoBehaviour {
 	#region Properties
 
-	private List<(CardSuit, CardValue)> cardsInDeck;
+	private List<(Element, CardValue)> cardsInDeck;
 	private Vector3 spawnPosition;
 	private Vector3 outOfBoxPosition;
 	private Vector3 pickupPosition;
@@ -66,21 +66,20 @@ public class CardDeck : MonoBehaviour {
 	}
 
 	private void FillDeckWithCards() {
-		cardsInDeck   = new List<(CardSuit, CardValue)>();
+		cardsInDeck   = new List<(Element, CardValue)>();
 		var allValues = Enum.GetValues(typeof(CardValue));
-		var allSuits  = Enum.GetValues(typeof(CardSuit));
+		var allSuits  = new[] { Element.Air, Element.Earth, Element.Fire, Element.Water };
 
-		foreach(var suit in allSuits) {
-			var cardSuit = (CardSuit) suit;
+		foreach(var cardSuit in allSuits) {
 			foreach(var value in allValues) {
 				var cardValue = (CardValue) value;
 				cardsInDeck.Add((cardSuit, cardValue));
 			}
 		}
 
-		var random      = new System.Random();
-		var randomized  = cardsInDeck.OrderBy(item => random.Next());
-		    cardsInDeck = randomized.ToList();
+		var random     = new System.Random();
+		var randomized = cardsInDeck.OrderBy(item => random.Next());
+		cardsInDeck    = randomized.ToList();
 	}
 
 	private Card SpawnNextCard() {

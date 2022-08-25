@@ -45,16 +45,16 @@ public class EnemyCard : Card
 
 	public override void ActivateCard()
 	{
-		var oppositeSuits         = cardType.GetOppositeSuits();
+		var oppositeSuits         = cardType.GetOppositeElements();
 		var primaryOppositeSuit   = oppositeSuits.Value.Item1;
 		var secondaryOppositeSuit = oppositeSuits.Value.Item2;
 
 		var numberSlots = References.Cards.Slots.number;
-		var slotsForType = new Dictionary<CardSuit, List<NumberCardSlot>> {
-			{ CardSuit.Air, new List<NumberCardSlot>() },
-			{ CardSuit.Earth, new List<NumberCardSlot>() },
-			{ CardSuit.Fire, new List<NumberCardSlot>() },
-			{ CardSuit.Water, new List<NumberCardSlot>() },
+		var slotsForType = new Dictionary<Element, List<NumberCardSlot>> {
+			{ Element.Air, new List<NumberCardSlot>() },
+			{ Element.Earth, new List<NumberCardSlot>() },
+			{ Element.Fire, new List<NumberCardSlot>() },
+			{ Element.Water, new List<NumberCardSlot>() },
 		};
 		var validEnemySlots = new List<EnemyCardSlot>();
 

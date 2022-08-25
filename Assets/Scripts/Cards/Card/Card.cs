@@ -35,7 +35,7 @@ public abstract class Card : MonoBehaviour {
 			return cardType;
 		}
 
-		public void SetCardType(CardValue value, CardSuit suit) {
+		public void SetCardType(CardValue value, Element suit) {
 			cardType.SetType(value, suit);
 		}
 

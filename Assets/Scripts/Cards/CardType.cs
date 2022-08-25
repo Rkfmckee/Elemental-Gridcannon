@@ -1,11 +1,10 @@
 using System.ComponentModel;
-using UnityEngine;
 
 public class CardType {
 	#region Properties
 
 	private CardValue value;
-	private CardSuit suit;
+	private Element suit;
 	private string type;
 
 	#endregion
@@ -16,7 +15,7 @@ public class CardType {
 		return value;
 	}
 
-	public CardSuit GetSuit() {
+	public Element GetSuit() {
 		return suit;
 	}
 
@@ -24,22 +23,22 @@ public class CardType {
 		return type;
 	}
 
-	public void SetType(CardValue value, CardSuit suit) {
+	public void SetType(CardValue value, Element suit) {
 		this.value = value;
 		this.suit  = suit;
 		type       = $"{value.GetDescription()}{suit.GetDescription()}";
 	}
 
-	public (CardSuit, CardSuit)? GetOppositeSuits() {
+	public (Element, Element)? GetOppositeElements() {
 		switch (suit) {
-			case CardSuit.Air:
-				return (CardSuit.Earth, CardSuit.Water);
-			case CardSuit.Earth:
-				return (CardSuit.Air, CardSuit.Fire);
-			case CardSuit.Fire:
-				return (CardSuit.Water, CardSuit.Earth);
-			case CardSuit.Water:
-				return (CardSuit.Fire, CardSuit.Air);
+			case Element.Air:
+				return (Element.Earth, Element.Water);
+			case Element.Earth:
+				return (Element.Air, Element.Fire);
+			case Element.Fire:
+				return (Element.Water, Element.Earth);
+			case Element.Water:
+				return (Element.Fire, Element.Air);
 		}
 
 		return null;
@@ -48,13 +47,6 @@ public class CardType {
 	#endregion
 
 	#region Enums
-
-	public enum CardSuit {
-		Air,
-		Earth,
-		Fire,
-		Water
-	}
 
 	public enum CardValue {
 		[Description("2")]

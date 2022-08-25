@@ -4,7 +4,7 @@ public class AttackOrb : MonoBehaviour {
 	#region Properties
 
 	private int damageAmount;
-	private DamageType damageType;
+	private Element damageType;
 
 	private MeshRenderer meshRenderer;
 
@@ -22,24 +22,13 @@ public class AttackOrb : MonoBehaviour {
 
 		#region Get/Set
 
-		public void SetDamage(int amount, DamageType type) {
+		public void SetDamage(int amount, Element type) {
 			damageAmount = amount;
 			damageType = type;
 			meshRenderer.material = Resources.Load<Material>($"Materials/AttackOrb/{type}");
 		}
 
 		#endregion
-
-	#endregion
-
-	#region Enums
-
-	public enum DamageType {
-		Air,
-		Earth,
-		Fire,
-		Water
-	}
 
 	#endregion
 }
