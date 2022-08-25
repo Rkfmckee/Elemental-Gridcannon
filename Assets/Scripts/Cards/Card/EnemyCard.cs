@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static CardType;
+using static Element;
 
 public class EnemyCard : Card
 {
@@ -45,16 +46,16 @@ public class EnemyCard : Card
 
 	public override void ActivateCard()
 	{
-		var oppositeSuits         = cardType.GetOppositeElements();
+		var oppositeSuits         = Element.GetOppositeElements(cardType.GetSuit());
 		var primaryOppositeSuit   = oppositeSuits.Value.Item1;
 		var secondaryOppositeSuit = oppositeSuits.Value.Item2;
 
 		var numberSlots = References.Cards.Slots.number;
-		var slotsForType = new Dictionary<Element, List<NumberCardSlot>> {
-			{ Element.Air, new List<NumberCardSlot>() },
-			{ Element.Earth, new List<NumberCardSlot>() },
-			{ Element.Fire, new List<NumberCardSlot>() },
-			{ Element.Water, new List<NumberCardSlot>() },
+		var slotsForType = new Dictionary<ElementType, List<NumberCardSlot>> {
+			{ ElementType.Air, new List<NumberCardSlot>() },
+			{ ElementType.Earth, new List<NumberCardSlot>() },
+			{ ElementType.Fire, new List<NumberCardSlot>() },
+			{ ElementType.Water, new List<NumberCardSlot>() },
 		};
 		var validEnemySlots = new List<EnemyCardSlot>();
 

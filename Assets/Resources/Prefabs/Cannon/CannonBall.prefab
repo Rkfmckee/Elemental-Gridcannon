@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 955162513586711223}
   - component: {fileID: 955162513586711222}
   - component: {fileID: 955162513586711241}
-  - component: {fileID: 955162513586711221}
+  - component: {fileID: 257734190126748870}
   m_Layer: 0
-  m_Name: AttackOrb
+  m_Name: CannonBall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -98,7 +98,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &955162513586711221
+--- !u!114 &257734190126748870
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,6 +107,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 955162513586711240}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fa49f330e9f28248a8e0a5034fa8317, type: 3}
+  m_Script: {fileID: 11500000, guid: 562f0f1fbc5822d40bdb0c9f14e0beb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

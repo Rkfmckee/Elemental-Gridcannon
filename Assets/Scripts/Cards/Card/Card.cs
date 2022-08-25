@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using static CardType;
+using static Element;
 
 public abstract class Card : MonoBehaviour {
 	#region Properties
@@ -35,7 +36,7 @@ public abstract class Card : MonoBehaviour {
 			return cardType;
 		}
 
-		public void SetCardType(CardValue value, Element suit) {
+		public void SetCardType(CardValue value, ElementType suit) {
 			cardType.SetType(value, suit);
 		}
 

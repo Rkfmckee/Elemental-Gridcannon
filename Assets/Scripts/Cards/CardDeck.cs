@@ -5,11 +5,12 @@ using System.Linq;
 using UnityEngine;
 using static Card;
 using static CardType;
+using static Element;
 
 public class CardDeck : MonoBehaviour {
 	#region Properties
 
-	private List<(Element, CardValue)> cardsInDeck;
+	private List<(ElementType, CardValue)> cardsInDeck;
 	private Vector3 spawnPosition;
 	private Vector3 outOfBoxPosition;
 	private Vector3 pickupPosition;
@@ -66,9 +67,9 @@ public class CardDeck : MonoBehaviour {
 	}
 
 	private void FillDeckWithCards() {
-		cardsInDeck   = new List<(Element, CardValue)>();
+		cardsInDeck   = new List<(ElementType, CardValue)>();
 		var allValues = Enum.GetValues(typeof(CardValue));
-		var allSuits  = new[] { Element.Air, Element.Earth, Element.Fire, Element.Water };
+		var allSuits  = new[] { ElementType.Air, ElementType.Earth, ElementType.Fire, ElementType.Water };
 
 		foreach(var cardSuit in allSuits) {
 			foreach(var value in allValues) {

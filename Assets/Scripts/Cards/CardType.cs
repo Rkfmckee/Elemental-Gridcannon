@@ -1,10 +1,11 @@
 using System.ComponentModel;
+using static Element;
 
 public class CardType {
 	#region Properties
 
 	private CardValue value;
-	private Element suit;
+	private ElementType suit;
 	private string type;
 
 	#endregion
@@ -15,7 +16,7 @@ public class CardType {
 		return value;
 	}
 
-	public Element GetSuit() {
+	public ElementType GetSuit() {
 		return suit;
 	}
 
@@ -23,25 +24,10 @@ public class CardType {
 		return type;
 	}
 
-	public void SetType(CardValue value, Element suit) {
+	public void SetType(CardValue value, ElementType suit) {
 		this.value = value;
 		this.suit  = suit;
 		type       = $"{value.GetDescription()}{suit.GetDescription()}";
-	}
-
-	public (Element, Element)? GetOppositeElements() {
-		switch (suit) {
-			case Element.Air:
-				return (Element.Earth, Element.Water);
-			case Element.Earth:
-				return (Element.Air, Element.Fire);
-			case Element.Fire:
-				return (Element.Water, Element.Earth);
-			case Element.Water:
-				return (Element.Fire, Element.Air);
-		}
-
-		return null;
 	}
 
 	#endregion

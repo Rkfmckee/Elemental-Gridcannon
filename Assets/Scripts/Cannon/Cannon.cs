@@ -20,6 +20,7 @@ public class Cannon : MonoBehaviour
 
 	private float spawnHeight;
 	private List<CannonShot> cannonShots;
+	private GameObject cannonBallPrefab;
 
 	#endregion
 
@@ -28,6 +29,7 @@ public class Cannon : MonoBehaviour
 	private void Awake()
 	{
 		spawnHeight = -1;
+		cannonBallPrefab = Resources.Load<GameObject>("Prefabs/Cannon/CannonBall");
 	}
 
 	#endregion
@@ -49,45 +51,50 @@ public class Cannon : MonoBehaviour
 		StartCoroutine(SetupShot());
 	}
 
-	private List<AttackOrb> CreateAttackOrbs(NumberCardSlot[] ammunitionSlots)
+	private List<CannonBall> CreateCannonBalls(NumberCardSlot[] ammunitionSlots)
 	{
-		var attackOrbPrefab = Resources.Load<GameObject>("Prefabs/Cannon/AttackOrb");
-		var attackOrbs      = new List<AttackOrb>();
+		var attackOrbs      = new List<CannonBall>();
 
 		foreach (var ammunitionSlot in ammunitionSlots)
 		{
 			var topCard = ammunitionSlot.GetTopCard();
 			if (topCard == null) continue;
 
-			var attackOrbPosition = ammunitionSlot.transform.position + GetSpawnHeightOffset();
-			var attackOrbRotation = Quaternion.identity;
-			var attackOrbObject   = Instantiate(attackOrbPrefab, attackOrbPosition, attackOrbRotation);
-			var attackOrb         = attackOrbObject.GetComponent<AttackOrb>();
+			var cannonBallPosition = ammunitionSlot.transform.position + GetSpawnHeightOffset();
+			var cannonBallRotation = Quaternion.identity;
+			var cannonBallObject   = Instantiate(cannonBallPrefab, cannonBallPosition, cannonBallRotation);
+			var cannonBall         = cannonBallObject.GetComponent<CannonBall>();
 
 			var cardValue    = topCard.GetCardType().GetValue().GetDescription();
 			var cardSuit     = topCard.GetCardType().GetSuit();
 			var damageAmount = Int32.Parse(cardValue);
 
-			attackOrb.SetDamage(damageAmount, cardSuit);
-			attackOrbs.Add(attackOrb);
+			cannonBall.SetDamage(damageAmount, cardSuit);
+			attackOrbs.Add(cannonBall);
 		}
 
 		return attackOrbs;
 	}
 
-	private int GetAttackDamage(CannonShot cannonShot)
+	private CannonBall CombineCannonBalls(ref List<CannonBall> cannonBalls)
 	{
-		var totalDamage = 0;
+		if (cannonBalls.Count > 2) return null;
 
-		foreach (var ammunitionSlot in cannonShot.ammunitionSlots)
+		var cannonBallPosition = cannonBalls[0].transform.position;
+		var cannonBallRotation = cannonBalls[0].transform.rotation;
+		var cannonBallObject   = Instantiate(cannonBallPrefab, cannonBallPosition, cannonBallRotation);
+		var cannonBall         = cannonBallObject.GetComponent<CannonBall>();
+
+		cannonBall.SetDamage(cannonBalls[0], cannonBalls[1]);
+		cannonBall.transform.localScale = cannonBallPrefab.transform.localScale * 2;
+
+		foreach(var oldCannonBall in cannonBalls)
 		{
-			var topCard = ammunitionSlot.GetTopCard();
-			if (topCard == null) continue;
-
-			totalDamage += Int32.Parse(topCard.GetCardType().GetValue().GetDescription());
+			Destroy(oldCannonBall.gameObject);
 		}
+		cannonBalls.Clear();
 
-		return totalDamage;
+		return cannonBall;
 	}
 
 	#endregion
@@ -105,30 +112,29 @@ public class Cannon : MonoBehaviour
 
 			// Raise cannon and/or ammunition
 			var ammunitionSlots = cannonShot.ammunitionSlots;
-			var attackOrbs      = CreateAttackOrbs(ammunitionSlots);
-			yield return StartCoroutine(RaiseUpCannonAndAmmunition(attackOrbs));
+			var cannonBalls     = CreateCannonBalls(ammunitionSlots);
+			yield return StartCoroutine(RaiseUpCannonAndAmmunition(cannonBalls));
 
 			// Load ammunition
 			var loadFinishPosition = transform.position;
-			yield return StartCoroutine(MoveOrbPosition(attackOrbs, loadFinishPosition, loadAmmunitionTime));
+			yield return StartCoroutine(MoveCannonBalls(cannonBalls, loadFinishPosition, loadAmmunitionTime));
+
+			var cannonBall = CombineCannonBalls(ref cannonBalls);
 
 			yield return new WaitForSeconds(0.5f);
 
 			// Fire
 			var fireFinishPosition = cannonShot.targetSlot.transform.position;
 			fireFinishPosition.y   = cannonHeight;
-			yield return StartCoroutine(MoveOrbPosition(attackOrbs, fireFinishPosition, fireAmmunitionTime));
+			yield return StartCoroutine(MoveCannonBall(cannonBall, fireFinishPosition, fireAmmunitionTime));
 
 			// Damage target and destroy
 			var enemy        = cannonShot.targetSlot.GetEnemyForCard();
 			var enemyHealth  = enemy.GetComponent<HealthSystem>();
-			var damageAmount = GetAttackDamage(cannonShot);
+			var damageAmount = cannonBall.GetDamageAmount();
 			enemyHealth.TakeDamageOverTime(damageAmount, 1);
 
-			foreach (var attackOrb in attackOrbs)
-			{
-				Destroy(attackOrb.gameObject);
-			}
+			Destroy(cannonBall.gameObject);
 		}
 
 		yield return new WaitForSeconds(0.5f);
@@ -151,7 +157,7 @@ public class Cannon : MonoBehaviour
 		}
 	}
 
-	private IEnumerator RaiseUpCannonAndAmmunition(List<AttackOrb> attackOrbs)
+	private IEnumerator RaiseUpCannonAndAmmunition(List<CannonBall> attackOrbs)
 	{
 		var timer     = 0f;
 		var newHeight = spawnHeight;
@@ -182,18 +188,30 @@ public class Cannon : MonoBehaviour
 		}
 	}
 
-	private IEnumerator MoveOrbPosition(List<AttackOrb> attackOrbs, Vector3 targetPosition, float timeToMove)
+	private IEnumerator MoveCannonBalls(List<CannonBall> cannonBalls, Vector3 targetPosition, float timeToMove)
 	{
 		var timer = 0f;
 
-		while (Vector3.Distance(attackOrbs[0].transform.position, targetPosition) > 0.1f)
+		while (Vector3.Distance(cannonBalls[0].transform.position, targetPosition) > 0.1f)
 		{
-			foreach (var attackOrb in attackOrbs)
+			foreach (var cannonBall in cannonBalls)
 			{
-				attackOrb.transform.position  = Vector3.Lerp(attackOrb.transform.position, targetPosition, timer / fireAmmunitionTime);
-				timer                        += Time.deltaTime;
+				cannonBall.transform.position  = Vector3.Lerp(cannonBall.transform.position, targetPosition, timer / timeToMove);
+				timer                         += Time.deltaTime;
 				yield return null;
 			}
+		}
+	}
+
+	private IEnumerator MoveCannonBall(CannonBall cannonBall, Vector3 targetPosition, float timeToMove)
+	{
+		var timer = 0f;
+
+		while (Vector3.Distance(cannonBall.transform.position, targetPosition) > 0.1f)
+		{
+			cannonBall.transform.position  = Vector3.Lerp(cannonBall.transform.position, targetPosition, timer / timeToMove);
+			timer                         += Time.deltaTime;
+			yield return null;
 		}
 	}
 
